@@ -80,7 +80,6 @@ export const BadgeCardPreview: React.FC<BadgeCardPreviewProps> = ({
   };
 
   const displayName = card.getDisplayName();
-  const displayHandle = card.getDisplayHandle();
   const displayLocation = card.getDisplayCityState();
   const displayGoal = card.getDisplayTransformationGoal();
   const initials = card.getInitials();
@@ -199,8 +198,6 @@ export const BadgeCardPreview: React.FC<BadgeCardPreviewProps> = ({
                 <BookOpen size={13} />
               </span>
             </div>
-
-            <p className="badge-member-handle">{displayHandle}</p>
 
             <p className="badge-member-role">
               <span className="badge-role-kicker">• Membro Oficial •</span>
