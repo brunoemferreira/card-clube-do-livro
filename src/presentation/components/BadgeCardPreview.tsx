@@ -213,7 +213,7 @@ export const BadgeCardPreview: React.FC<BadgeCardPreviewProps> = ({
             <p className="badge-member-handle">{displayHandle}</p>
 
             <p className="badge-member-role">
-              Membro Oficial • Comunidade Livros &amp; Negócios
+              Membro Oficial • Comunidade Clube do Livros &amp; Negócios
             </p>
 
             <div className="badge-location-row">
