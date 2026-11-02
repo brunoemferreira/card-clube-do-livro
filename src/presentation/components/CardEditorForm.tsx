@@ -94,14 +94,42 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
   return (
     <section className="editor-form-section" aria-label="Personalizar dados do Card">
       <div className="section-title-group">
-        <span className="step-kicker">PASSO 1 • PERSONALIZAÇÃO AO VIVO</span>
+        <span className="step-kicker">PERSONALIZAÇÃO AO VIVO</span>
         <h2 className="section-heading">Preencha seus dados de Membro</h2>
         <p className="section-subtitle">
-          À medida que você preenche, sua credencial ao lado é atualizada em tempo real.
+          Sua credencial é atualizada em tempo real enquanto você preenche.
         </p>
       </div>
 
-      {/* Upload e Alinhamento de Foto */}
+      {/* 1. Seletor de Tema do Crachá (Acima da Foto do Perfil) */}
+      <div className="form-field-group">
+        <span className="form-label">
+          <Palette size={15} />
+          <span>Tema do Crachá</span>
+        </span>
+        <div className="theme-selector-grid">
+          {THEME_OPTIONS.map((theme) => {
+            const isSelected = card.themeAccent === theme.id;
+            return (
+              <button
+                key={theme.id}
+                type="button"
+                className={`theme-option-btn ${isSelected ? 'active' : ''}`}
+                onClick={() => onUpdateThemeAccent(theme.id)}
+                aria-pressed={isSelected}
+              >
+                <span
+                  className="theme-swatch"
+                  style={{ background: theme.swatchGradient }}
+                />
+                <span>{theme.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 2. Upload e Alinhamento de Foto do Perfil */}
       <div className="form-field-group">
         <label className="form-label" htmlFor="member-photo-input">
           <Camera size={15} />
@@ -171,7 +199,7 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
             <div className="photo-alignment-panel">
               <div className="alignment-panel-header">
                 <span className="alignment-title">
-                  Ajustar enquadramento da foto (ou arraste direto no crachá)
+                  Ajustar enquadramento (ou arraste a foto no crachá)
                 </span>
                 <button
                   type="button"
@@ -240,7 +268,7 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
         </div>
       </div>
 
-      {/* Nome e Cidade/Estado em Grid */}
+      {/* 3. Nome e Cidade/Estado */}
       <div className="form-row-grid">
         <div className="form-field-group">
           <label className="form-label" htmlFor="member-name-input">
@@ -275,7 +303,7 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
         </div>
       </div>
 
-      {/* Pergunta de Transformação */}
+      {/* 4. Pergunta de Transformação */}
       <div className="form-field-group">
         <div className="form-label-with-counter">
           <label className="form-label" htmlFor="member-goal-textarea">
@@ -311,34 +339,6 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
               </button>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* Seletor de Estilo / Cores */}
-      <div className="form-field-group">
-        <span className="form-label">
-          <Palette size={15} />
-          <span>Tema do Crachá</span>
-        </span>
-        <div className="theme-selector-grid">
-          {THEME_OPTIONS.map((theme) => {
-            const isSelected = card.themeAccent === theme.id;
-            return (
-              <button
-                key={theme.id}
-                type="button"
-                className={`theme-option-btn ${isSelected ? 'active' : ''}`}
-                onClick={() => onUpdateThemeAccent(theme.id)}
-                aria-pressed={isSelected}
-              >
-                <span
-                  className="theme-swatch"
-                  style={{ background: theme.swatchGradient }}
-                />
-                <span>{theme.label}</span>
-              </button>
-            );
-          })}
         </div>
       </div>
     </section>
