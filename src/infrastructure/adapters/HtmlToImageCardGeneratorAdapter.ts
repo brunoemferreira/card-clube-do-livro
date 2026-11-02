@@ -440,7 +440,7 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
         ctx.strokeStyle = 'rgba(246, 226, 156, 0.5)';
         ctx.lineWidth = 1;
         this.strokeRoundedRect(ctx, pillX, pillY, pillSize, pillSize, 6);
-        this.drawMiniBookIcon(ctx, pillX + 4.5, pillY + 5, 11, '#f6e29c');
+        this.drawLucideBookOpenIcon(ctx, pillX + 3.5, pillY + 3.5, 13, '#f6e29c');
 
         ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'center';
@@ -468,7 +468,7 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     const locWidth = ctx.measureText(locationText).width;
     const locTotalW = 14 + 5 + locWidth;
     const locStartX = (baseWidth - locTotalW) / 2;
-    this.drawMapPinIcon(ctx, locStartX + 7, locationY + 7, '#d4af37');
+    this.drawLucideMapPinIcon(ctx, locStartX, locationY + 1, 14, '#d4af37');
     ctx.fillStyle = '#d6ccbe';
     ctx.textAlign = 'left';
     ctx.fillText(locationText, locStartX + 19, locationY + 12);
@@ -488,7 +488,7 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     this.strokeRoundedRect(ctx, boxX, quoteBoxY, boxW, quoteBoxHeight, 12);
 
     // Ícone Sparkle + Pergunta com o nome do livro
-    this.drawSparkleIcon(ctx, boxX + 16, quoteBoxY + 16, '#d4af37');
+    this.drawLucideSparklesIcon(ctx, boxX + 10, quoteBoxY + 9, 13, '#d4af37');
     ctx.font = '700 11px "Plus Jakarta Sans", sans-serif';
     ctx.fillStyle = '#f6e29c';
     ctx.textAlign = 'left';
@@ -504,22 +504,31 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
       ctx.fillText(line, boxX + 14, quoteStartY + idx * 20);
     });
 
-    // 10. Tags de Pilares (LEITURA | ESTRATÉGIA | MENTALIDADE)
-    const tags = [
+    // 10. Tags de Pilares com seus respectivos ícones (LEITURA | ESTRATÉGIA | MENTALIDADE)
+    const tags: ReadonlyArray<{
+      readonly label: string;
+      readonly icon: 'book' | 'trending' | 'flame';
+      readonly textColor: string;
+      readonly bgColor: string;
+      readonly borderColor: string;
+    }> = [
       {
         label: 'LEITURA',
+        icon: 'book',
         textColor: '#f6e29c',
         bgColor: 'rgba(212, 175, 55, 0.12)',
         borderColor: 'rgba(212, 175, 55, 0.34)',
       },
       {
         label: 'ESTRATÉGIA',
+        icon: 'trending',
         textColor: '#fda4af',
         bgColor: 'rgba(153, 0, 0, 0.24)',
         borderColor: 'rgba(182, 12, 45, 0.4)',
       },
       {
         label: 'MENTALIDADE',
+        icon: 'flame',
         textColor: '#fcd34d',
         bgColor: 'rgba(180, 83, 9, 0.18)',
         borderColor: 'rgba(245, 158, 11, 0.34)',
@@ -528,7 +537,12 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
 
     ctx.font = '800 9.5px "Plus Jakarta Sans", sans-serif';
     const tagGap = 6;
-    const tagWidths = tags.map((t) => ctx.measureText(t.label).width + 20);
+    const iconSize = 11;
+    const iconTextGap = 4.5;
+    const tagPadX = 8.5;
+    const tagWidths = tags.map(
+      (t) => tagPadX * 2 + iconSize + iconTextGap + ctx.measureText(t.label).width,
+    );
     const totalTagsWidth =
       tagWidths.reduce((acc, w) => acc + w, 0) + tagGap * (tags.length - 1);
     let currentTagX = (baseWidth - totalTagsWidth) / 2;
@@ -542,9 +556,24 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
       ctx.lineWidth = 1;
       this.strokeRoundedRect(ctx, currentTagX, pillarsY, tw, th, 6);
 
+      const iconX = currentTagX + tagPadX;
+      const iconY = pillarsY + (th - iconSize) / 2;
+
+      if (tag.icon === 'book') {
+        this.drawLucideBookOpenIcon(ctx, iconX, iconY, iconSize, tag.textColor);
+      } else if (tag.icon === 'trending') {
+        this.drawLucideTrendingUpIcon(ctx, iconX, iconY, iconSize, tag.textColor);
+      } else {
+        this.drawLucideFlameIcon(ctx, iconX, iconY, iconSize, tag.textColor);
+      }
+
       ctx.fillStyle = tag.textColor;
-      ctx.textAlign = 'center';
-      ctx.fillText(tag.label, currentTagX + tw / 2, pillarsY + 14.5);
+      ctx.textAlign = 'left';
+      ctx.fillText(
+        tag.label,
+        iconX + iconSize + iconTextGap,
+        pillarsY + 14.5,
+      );
       currentTagX += tw + tagGap;
     });
 
@@ -664,7 +693,7 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     ctx.stroke();
   }
 
-  private drawMiniBookIcon(
+  private drawLucideBookOpenIcon(
     ctx: CanvasRenderingContext2D,
     x: number,
     y: number,
@@ -672,68 +701,103 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     color: string,
   ): void {
     ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(size / 24, size / 24);
     ctx.strokeStyle = color;
-    ctx.lineWidth = 1.3;
+    ctx.lineWidth = 2.2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke(new Path2D('M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'));
+    ctx.stroke(new Path2D('M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'));
+    ctx.restore();
+  }
+
+  private drawLucideTrendingUpIcon(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    size: number,
+    color: string,
+  ): void {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(size / 24, size / 24);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.4;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke(new Path2D('M22 7L13.5 15.5L8.5 10.5L2 17'));
+    ctx.stroke(new Path2D('M16 7H22V13'));
+    ctx.restore();
+  }
+
+  private drawLucideFlameIcon(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    size: number,
+    color: string,
+  ): void {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(size / 24, size / 24);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke(
+      new Path2D(
+        'M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z',
+      ),
+    );
+    ctx.restore();
+  }
+
+  private drawLucideMapPinIcon(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    size: number,
+    color: string,
+  ): void {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(size / 24, size / 24);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.1;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke(
+      new Path2D(
+        'M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0',
+      ),
+    );
     ctx.beginPath();
-    ctx.moveTo(x + size / 2, y + 1.5);
-    ctx.lineTo(x + size / 2, y + size - 1);
-    ctx.moveTo(x + 1, y + 1);
-    ctx.quadraticCurveTo(x + size * 0.25, y + 0.5, x + size / 2, y + 2);
-    ctx.quadraticCurveTo(x + size * 0.75, y + 0.5, x + size - 1, y + 1);
-    ctx.lineTo(x + size - 1, y + size - 1.5);
-    ctx.quadraticCurveTo(x + size * 0.75, y + size - 2, x + size / 2, y + size - 0.5);
-    ctx.quadraticCurveTo(x + size * 0.25, y + size - 2, x + 1, y + size - 1.5);
-    ctx.closePath();
+    ctx.arc(12, 10, 3, 0, Math.PI * 2);
     ctx.stroke();
     ctx.restore();
   }
 
-  private drawMapPinIcon(
+  private drawLucideSparklesIcon(
     ctx: CanvasRenderingContext2D,
-    centerX: number,
-    centerY: number,
+    x: number,
+    y: number,
+    size: number,
     color: string,
   ): void {
     ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(size / 24, size / 24);
     ctx.strokeStyle = color;
-    ctx.lineWidth = 1.4;
-    ctx.beginPath();
-    ctx.arc(centerX, centerY - 1.5, 4.2, Math.PI * 0.85, Math.PI * 0.15, false);
-    ctx.lineTo(centerX, centerY + 5.5);
-    ctx.closePath();
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.arc(centerX, centerY - 1.5, 1.5, 0, Math.PI * 2);
-    ctx.fillStyle = color;
-    ctx.fill();
-    ctx.restore();
-  }
-
-  private drawSparkleIcon(
-    ctx: CanvasRenderingContext2D,
-    centerX: number,
-    centerY: number,
-    color: string,
-  ): void {
-    ctx.save();
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    const rOuter = 5;
-    const rInner = 1.6;
-    for (let i = 0; i < 8; i++) {
-      const angle = (i * Math.PI) / 4;
-      const r = i % 2 === 0 ? rOuter : rInner;
-      const px = centerX + Math.cos(angle) * r;
-      const py = centerY + Math.sin(angle) * r;
-      if (i === 0) {
-        ctx.moveTo(px, py);
-      } else {
-        ctx.lineTo(px, py);
-      }
-    }
-    ctx.closePath();
-    ctx.fill();
+    ctx.lineWidth = 2.1;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke(
+      new Path2D(
+        'M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z',
+      ),
+    );
+    ctx.stroke(new Path2D('M20 3v4M22 5h-4M4 17v2M5 18H3'));
     ctx.restore();
   }
 
