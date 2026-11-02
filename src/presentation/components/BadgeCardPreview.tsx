@@ -226,7 +226,7 @@ export const BadgeCardPreview: React.FC<BadgeCardPreviewProps> = ({
                 <BookOpen size={11} /> LEITURA
               </span>
               <span className="pillar-tag tag-crimson">
-                <TrendingUp size={11} /> NEGÓCIOS
+                <TrendingUp size={11} /> ESTRATÉGIA
               </span>
               <span className="pillar-tag tag-amber">
                 <Flame size={11} /> MENTALIDADE
