@@ -1,0 +1,1191 @@
+:root {
+  /* Paleta Oficial Clube do Livro (Livros & Negócios) */
+  --clube-wine-deepest: #0a0405;
+  --clube-wine-dark: #16090b;
+  --clube-wine-surface: #1e0d10;
+  --clube-wine-primary: #5b0000;
+  --clube-wine-vivid: #990000;
+  --clube-crimson-glow: #b60c2d;
+
+  /* Ouro & Bronze do Selo Clube do Livro */
+  --clube-gold-light: #f6e29c;
+  --clube-gold-primary: #d4af37;
+  --clube-gold-deep: #9e7418;
+  --clube-cream: #f3f0ec;
+  --clube-sand: #d6ccbe;
+
+  /* Superfícies do Layout Split (Inspirado no Rocketseat ID) */
+  --bg-left-stage: #070304;
+  --bg-right-panel: #140b0d;
+  --card-surface-bg: #181113;
+  --card-surface-border: rgba(212, 175, 55, 0.24);
+  --input-bg: rgba(12, 5, 6, 0.72);
+  --input-border: rgba(214, 204, 190, 0.16);
+  --input-border-focus: #d4af37;
+
+  /* Textos */
+  --text-primary: #f7f4f0;
+  --text-secondary: #c5b8ae;
+  --text-muted: #8c7b72;
+
+  /* Tipografia */
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  min-height: 100%;
+  background-color: var(--bg-left-stage);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+}
+
+.sr-only-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* =========================================================
+   SPLIT SCREEN LAYOUT (Idêntico à estrutura da imagem)
+   ========================================================= */
+.app-split-layout {
+  display: grid;
+  grid-template-columns: minmax(420px, 46%) 1fr;
+  min-height: 100vh;
+}
+
+/* COLUNA ESQUERDA - PALCO DO CRACHÁ */
+.left-preview-column {
+  background:
+    radial-gradient(circle at 50% 25%, rgba(153, 0, 0, 0.22) 0%, transparent 62%),
+    radial-gradient(circle at 50% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 55%),
+    var(--bg-left-stage);
+  border-right: 1px solid rgba(212, 175, 55, 0.14);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1.25rem 2.5rem;
+  position: relative;
+}
+
+.preview-sticky-wrapper {
+  position: sticky;
+  top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.live-indicator-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  color: var(--clube-gold-light);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.6rem;
+}
+
+.live-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+}
+
+/* =========================================================
+   CRACHÁ / CARD OFICIAL (EXPORTÁVEL PARA PNG)
+   ========================================================= */
+.badge-preview-stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.badge-export-canvas {
+  position: relative;
+  width: 390px;
+  padding: 0 18px 22px;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(153, 0, 0, 0.28) 0%, transparent 65%),
+    #0a0506;
+  border-radius: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+.badge-ambient-glow {
+  position: absolute;
+  top: 60px;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(212, 175, 55, 0.18) 0%,
+    rgba(153, 0, 0, 0.12) 45%,
+    transparent 70%
+  );
+  filter: blur(28px);
+  pointer-events: none;
+}
+
+/* Fita / Cordão Superior (Lanyard) */
+.badge-lanyard-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 3;
+  margin-bottom: -10px;
+}
+
+.badge-lanyard-strap {
+  width: 44px;
+  height: 92px;
+  background: linear-gradient(
+    90deg,
+    #1c0c0e 0%,
+    #2f1217 50%,
+    #190a0c 100%
+  );
+  border-left: 1px solid rgba(212, 175, 55, 0.32);
+  border-right: 1px solid rgba(212, 175, 55, 0.32);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.65);
+}
+
+.lanyard-text {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  color: rgba(246, 226, 156, 0.55);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.badge-lanyard-clasp {
+  width: 56px;
+  height: 10px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #8b6514 0%, #f5df98 50%, #8b6514 100%);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
+}
+
+/* Corpo do Crachá */
+.member-badge-card {
+  position: relative;
+  width: 100%;
+  background: linear-gradient(180deg, #1b1214 0%, #130c0e 100%);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 20px;
+  box-shadow:
+    0 24px 50px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  transition: transform 0.18s ease-out;
+  z-index: 2;
+}
+
+.badge-slot-hole {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 58px;
+  height: 8px;
+  border-radius: 99px;
+  background: #070304;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  z-index: 5;
+}
+
+/* Header Artístico do Crachá (Temas) */
+.badge-card-banner {
+  position: relative;
+  height: 126px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.24);
+}
+
+.banner-mesh-gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 82% 22%, rgba(212, 175, 55, 0.55) 0%, transparent 48%),
+    radial-gradient(circle at 20% 80%, rgba(182, 12, 45, 0.7) 0%, transparent 58%),
+    linear-gradient(135deg, #290000 0%, #5b0000 52%, #1d070a 100%);
+}
+
+.theme-espresso-bronze .banner-mesh-gradient {
+  background:
+    radial-gradient(circle at 82% 22%, rgba(200, 138, 75, 0.58) 0%, transparent 48%),
+    radial-gradient(circle at 20% 80%, rgba(114, 34, 0, 0.72) 0%, transparent 58%),
+    linear-gradient(135deg, #1d100b 0%, #4b2514 52%, #140b08 100%);
+}
+
+.theme-royal-crimson .banner-mesh-gradient {
+  background:
+    radial-gradient(circle at 80% 20%, rgba(245, 196, 81, 0.62) 0%, transparent 46%),
+    radial-gradient(circle at 25% 75%, rgba(233, 21, 0, 0.65) 0%, transparent 55%),
+    linear-gradient(135deg, #3b0006 0%, #990000 55%, #220408 100%);
+}
+
+.banner-gold-lines {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    -35deg,
+    rgba(246, 226, 156, 0.05) 0px,
+    rgba(246, 226, 156, 0.05) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+}
+
+.banner-brand-pill {
+  position: absolute;
+  top: 24px;
+  left: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 5px;
+  border-radius: 999px;
+  background: rgba(10, 4, 5, 0.68);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  backdrop-filter: blur(6px);
+}
+
+.banner-mini-logo {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.banner-brand-pill span {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  color: var(--clube-gold-light);
+}
+
+.banner-edit-photo-btn {
+  position: absolute;
+  top: 22px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #b88924 0%, #d4af37 100%);
+  color: #16090b;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.banner-edit-photo-btn:hover {
+  transform: scale(1.06);
+  filter: brightness(1.1);
+}
+
+/* Avatar Squircle com o Selo Clube do Livro */
+.badge-avatar-section {
+  display: flex;
+  justify-content: center;
+  margin-top: -64px;
+  position: relative;
+  z-index: 4;
+}
+
+.badge-avatar-frame {
+  position: relative;
+  width: 128px;
+  height: 128px;
+  border-radius: 36px;
+  background: linear-gradient(135deg, #f6e29c 0%, #990000 50%, #d4af37 100%);
+  padding: 3px;
+  cursor: pointer;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.65);
+}
+
+.badge-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 33px;
+  display: block;
+  background: #140b0d;
+}
+
+.badge-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 33px;
+  background: radial-gradient(circle at 30% 25%, #3d1218 0%, #15080a 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--clube-gold-light);
+}
+
+.avatar-initials {
+  font-family: var(--font-serif);
+  font-size: 2.3rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.avatar-upload-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: var(--clube-sand);
+  opacity: 0.85;
+}
+
+.badge-avatar-seal {
+  position: absolute;
+  bottom: -6px;
+  right: -8px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #12080a;
+  border: 2px solid var(--clube-gold-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.75);
+}
+
+.avatar-seal-img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+
+/* Corpo de Informações do Card */
+.badge-card-body {
+  padding: 1rem 1.35rem 1.25rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.badge-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.badge-member-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.badge-verified-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #7b0918 0%, #b60c2d 100%);
+  border: 1px solid rgba(246, 226, 156, 0.5);
+  color: var(--clube-gold-light);
+}
+
+.badge-member-handle {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  font-family: var(--font-mono);
+}
+
+.badge-member-role {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--clube-gold-light);
+  margin-top: 0.45rem;
+}
+
+.badge-location-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--clube-sand);
+}
+
+.location-pin-icon {
+  color: var(--clube-gold-primary);
+  flex-shrink: 0;
+}
+
+/* Caixa da Pergunta: O que busca transformar através da leitura */
+.badge-transformation-box {
+  width: 100%;
+  margin-top: 0.95rem;
+  padding: 0.8rem 0.9rem;
+  border-radius: 13px;
+  background: linear-gradient(
+    180deg,
+    rgba(91, 0, 0, 0.24) 0%,
+    rgba(20, 10, 12, 0.78) 100%
+  );
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  text-align: left;
+}
+
+.transformation-header {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  color: var(--clube-gold-primary);
+  margin-bottom: 0.38rem;
+}
+
+.transformation-sparkle {
+  flex-shrink: 0;
+}
+
+.transformation-quote {
+  font-family: var(--font-serif);
+  font-size: 0.98rem;
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--clube-cream);
+  word-break: break-word;
+}
+
+/* Tags de Pilares (Como as tags JS / React / Tailwind na referência) */
+.badge-pillars-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+}
+
+.pillar-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pillar-tag.tag-gold {
+  color: #f6e29c;
+  border-color: rgba(212, 175, 55, 0.3);
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.pillar-tag.tag-crimson {
+  color: #fda4af;
+  border-color: rgba(182, 12, 45, 0.35);
+  background: rgba(153, 0, 0, 0.2);
+}
+
+.pillar-tag.tag-amber {
+  color: #fcd34d;
+  border-color: rgba(245, 158, 11, 0.28);
+  background: rgba(180, 83, 9, 0.15);
+}
+
+/* Rodapé do Crachá */
+.badge-card-footer {
+  padding: 0.78rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  background: rgba(8, 3, 4, 0.45);
+}
+
+/* =========================================================
+   COLUNA DIREITA - FORMULÁRIO E COMPARTILHAMENTO
+   ========================================================= */
+.right-control-column {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(153, 0, 0, 0.14) 0%, transparent 45%),
+    var(--bg-right-panel);
+  padding: 2.25rem 2.5rem 3.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.control-column-inner {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* Cabeçalho com Logo Oficial */
+.brand-top-header {
+  padding-bottom: 1.15rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.16);
+}
+
+.brand-logo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.95rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand-header-logo {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
+}
+
+.brand-header-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--clube-gold-primary);
+}
+
+.brand-main-title {
+  font-family: var(--font-serif);
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--clube-cream);
+  line-height: 1.1;
+}
+
+/* Títulos das Seções */
+.section-title-group {
+  margin-bottom: 1.15rem;
+}
+
+.step-kicker {
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--clube-gold-primary);
+  margin-bottom: 0.25rem;
+}
+
+.section-heading {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.section-subtitle {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+  line-height: 1.45;
+}
+
+/* Campos do Formulário */
+.editor-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.form-row-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.95rem;
+}
+
+.form-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.form-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--clube-cream);
+}
+
+.form-label svg {
+  color: var(--clube-gold-primary);
+}
+
+.form-label-with-counter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.char-counter {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.form-text-input,
+.form-textarea-input {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 11px;
+  padding: 0.75rem 0.9rem;
+  color: #ffffff;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-text-input::placeholder,
+.form-textarea-input::placeholder {
+  color: rgba(197, 184, 174, 0.42);
+}
+
+.form-text-input:focus,
+.form-textarea-input:focus {
+  outline: none;
+  border-color: var(--input-border-focus);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.16);
+}
+
+.form-textarea-input {
+  resize: vertical;
+  min-height: 82px;
+  line-height: 1.45;
+}
+
+/* Dropzone de Foto */
+.photo-upload-dropzone {
+  padding: 0.75rem 0.95rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px dashed rgba(212, 175, 55, 0.35);
+}
+
+.photo-upload-preview-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.mini-avatar-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1.5px solid var(--clube-gold-primary);
+}
+
+.mini-avatar-empty {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(153, 0, 0, 0.22);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--clube-gold-light);
+}
+
+.photo-upload-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.btn-upload-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.52rem 0.95rem;
+  border-radius: 9px;
+  background: rgba(212, 175, 55, 0.14);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: var(--clube-gold-light);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-upload-trigger:hover {
+  background: rgba(212, 175, 55, 0.24);
+}
+
+.btn-remove-photo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.52rem 0.75rem;
+  border-radius: 9px;
+  background: rgba(182, 12, 45, 0.15);
+  border: 1px solid rgba(182, 12, 45, 0.35);
+  color: #fda4af;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Sugestões Rápidas */
+.suggestions-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.2rem;
+}
+
+.suggestions-label {
+  font-size: 0.73rem;
+  color: var(--text-muted);
+}
+
+.suggestion-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.suggestion-chip {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  color: var(--clube-sand);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.suggestion-chip:hover {
+  background: rgba(212, 175, 55, 0.16);
+  color: var(--clube-gold-light);
+  border-color: var(--clube-gold-primary);
+}
+
+/* Seletor de Temas */
+.theme-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+
+.theme-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.theme-option-btn.active {
+  border-color: var(--clube-gold-primary);
+  background: rgba(212, 175, 55, 0.12);
+  color: #ffffff;
+}
+
+.theme-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid rgba(212, 175, 55, 0.14);
+}
+
+/* =========================================================
+   PAINEL DE COMPARTILHAMENTO (WHATSAPP, PNG, LINK, EMBED)
+   ========================================================= */
+.share-actions-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.btn-whatsapp-hero {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.95rem 1.25rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #15803d 0%, #16a34a 50%, #22c55e 100%);
+  color: #ffffff;
+  font-size: 0.98rem;
+  font-weight: 800;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(22, 163, 74, 0.32);
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.btn-whatsapp-hero:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+
+.btn-whatsapp-hero:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+/* Grade de 4 botões sociais como na imagem de referência */
+.social-tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.65rem;
+}
+
+.social-tile-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-between;
+  gap: 0.55rem;
+  padding: 0.85rem 0.9rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.social-tile-btn:hover {
+  background: rgba(212, 175, 55, 0.1);
+  border-color: rgba(212, 175, 55, 0.32);
+  color: #ffffff;
+}
+
+.social-tile-btn.tile-whatsapp svg {
+  color: #4ade80;
+}
+
+/* Botões Baixar PNG + Copiar Link lado a lado */
+.primary-actions-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.btn-download-png {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.82rem 1rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-download-png:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.btn-copy-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.82rem 1rem;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #8b0015 0%, #b60c2d 50%, #990000 100%);
+  border: 1px solid rgba(246, 226, 156, 0.4);
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.btn-copy-link:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+/* Alertas de Feedback */
+.feedback-alert {
+  padding: 0.75rem 0.95rem;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.feedback-success {
+  background: rgba(22, 163, 74, 0.16);
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  color: #bbf7d0;
+}
+
+.feedback-info {
+  background: rgba(212, 175, 55, 0.14);
+  border: 1px solid rgba(212, 175, 55, 0.42);
+  color: var(--clube-gold-light);
+}
+
+.feedback-error {
+  background: rgba(220, 38, 38, 0.18);
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  color: #fecaca;
+}
+
+/* Caixa Embed Code / Mensagem WhatsApp (Idêntica à caixa destacada na referência) */
+.embed-box-container {
+  margin-top: 0.25rem;
+  padding: 0.9rem;
+  border-radius: 12px;
+  background: rgba(10, 4, 5, 0.65);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+.embed-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.embed-tabs {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.embed-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.32rem 0.65rem;
+  border-radius: 7px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.embed-tab-btn.active {
+  background: rgba(212, 175, 55, 0.14);
+  border-color: rgba(212, 175, 55, 0.35);
+  color: var(--clube-gold-light);
+}
+
+.embed-code-block {
+  position: relative;
+  background: #080304;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  padding: 0.75rem 2.75rem 0.75rem 0.85rem;
+  max-height: 112px;
+  overflow-y: auto;
+}
+
+.embed-code-pre {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: var(--clube-sand);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.btn-copy-code-icon {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--clube-gold-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn-copy-code-icon:hover {
+  background: rgba(212, 175, 55, 0.22);
+}
+
+.clube-official-link-row {
+  margin-top: 0.65rem;
+}
+
+.clube-official-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--clube-gold-light);
+  text-decoration: none;
+  opacity: 0.88;
+}
+
+.clube-official-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.mini-footer-seal {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+/* Responsividade Mobile / Tablet */
+@media (max-width: 960px) {
+  .app-split-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .left-preview-column {
+    border-right: none;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+    padding: 1.25rem 1rem 2rem;
+  }
+
+  .preview-sticky-wrapper {
+    position: static;
+  }
+
+  .right-control-column {
+    padding: 1.75rem 1.25rem 3rem;
+  }
+
+  .form-row-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .social-tiles-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .theme-selector-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .badge-export-canvas {
+    width: 100%;
+    max-width: 360px;
+    padding: 0 12px 18px;
+  }
+}
