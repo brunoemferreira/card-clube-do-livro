@@ -89,9 +89,7 @@ export const CardGeneratorPage: React.FC = () => {
             onRemoveAvatar={removeAvatar}
           />
 
-          <hr className="section-divider" />
-
-          {/* Painel de Compartilhamento (WhatsApp e Download PNG) */}
+          {/* Painel de Compartilhamento (WhatsApp e Download PNG lado a lado) */}
           <ShareActionsPanel
             isGeneratingImage={isGeneratingImage}
             feedback={feedback}

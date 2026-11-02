@@ -20,39 +20,30 @@ export const ShareActionsPanel: React.FC<ShareActionsPanelProps> = ({
       className="share-actions-section"
       aria-label="Compartilhar Clube do Livro ID"
     >
-      <div className="section-title-group">
-        <span className="step-kicker">PASSO 2 • COMPARTILHAMENTO</span>
-        <h2 className="section-heading">Compartilhar Credencial Clube do Livro</h2>
-        <p className="section-subtitle">
-          Gere a imagem completa da sua credencial e compartilhe diretamente no WhatsApp.
-        </p>
+      {/* Botões lado a lado: Compartilhar no WhatsApp + Baixar PNG */}
+      <div className="share-buttons-side-by-side">
+        <button
+          type="button"
+          className="btn-whatsapp-hero"
+          onClick={onShareWhatsApp}
+          disabled={isGeneratingImage}
+        >
+          <MessageCircle size={18} />
+          <span>
+            {isGeneratingImage ? 'Gerando Card...' : 'Compartilhar no WhatsApp'}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          className="btn-download-png-full"
+          onClick={onDownloadPng}
+          disabled={isGeneratingImage}
+        >
+          <Download size={18} />
+          <span>{isGeneratingImage ? 'Gerando PNG...' : 'Baixar Imagem PNG'}</span>
+        </button>
       </div>
-
-      {/* Botão Principal: Compartilhar Imagem Completa no WhatsApp */}
-      <button
-        type="button"
-        className="btn-whatsapp-hero"
-        onClick={onShareWhatsApp}
-        disabled={isGeneratingImage}
-      >
-        <MessageCircle size={20} />
-        <span>
-          {isGeneratingImage
-            ? 'Gerando Imagem Completa do Card...'
-            : 'Compartilhar no WhatsApp'}
-        </span>
-      </button>
-
-      {/* Botão Baixar Imagem PNG em largura total */}
-      <button
-        type="button"
-        className="btn-download-png-full"
-        onClick={onDownloadPng}
-        disabled={isGeneratingImage}
-      >
-        <Download size={18} />
-        <span>{isGeneratingImage ? 'Gerando PNG...' : 'Baixar Imagem PNG'}</span>
-      </button>
 
       {/* Feedback de Compartilhamento / Download */}
       {feedback && (

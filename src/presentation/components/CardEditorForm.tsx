@@ -290,7 +290,7 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
         <textarea
           id="member-goal-textarea"
           className="form-textarea-input"
-          rows={3}
+          rows={2}
           maxLength={180}
           placeholder="Escreva como a leitura vai impulsionar sua mentalidade, carreira ou negócios..."
           value={card.readingTransformationGoal}
