@@ -456,6 +456,7 @@ textarea {
   letter-spacing: 0.06em;
   color: var(--clube-gold-light);
   line-height: 1.05;
+  white-space: nowrap;
 }
 
 .banner-club-subtitle {
