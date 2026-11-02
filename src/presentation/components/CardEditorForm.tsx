@@ -2,10 +2,10 @@ import React from 'react';
 import {
   ArrowLeftRight,
   ArrowUpDown,
+  BookOpen,
   Camera,
   Check,
   MapPin,
-  Palette,
   RotateCcw,
   Sparkles,
   Trash2,
@@ -55,25 +55,32 @@ const THEME_OPTIONS: ReadonlyArray<{
   readonly activeBorderColor: string;
 }> = [
   {
-    id: 'burgundy-gold',
-    label: 'Vinho & Ouro',
+    id: 'triade-do-tempo',
+    label: 'Tríade do Tempo',
+    primaryColor: '#2563EB',
+    secondaryColor: '#38BDF8',
+    activeBorderColor: '#38BDF8',
+  },
+  {
+    id: 'mais-esperto-que-o-diabo',
+    label: 'Mais Esperto que o Diabo',
     primaryColor: '#DC2626',
     secondaryColor: '#FACC15',
     activeBorderColor: '#EF4444',
   },
   {
-    id: 'espresso-bronze',
-    label: 'Noite & Ouro',
-    primaryColor: '#18181B',
-    secondaryColor: '#F59E0B',
-    activeBorderColor: '#F59E0B',
-  },
-  {
-    id: 'royal-crimson',
-    label: 'Esmeralda & Ouro',
+    id: 'a-montanha',
+    label: 'A Montanha',
     primaryColor: '#059669',
     secondaryColor: '#FDE047',
     activeBorderColor: '#10B981',
+  },
+  {
+    id: 'habitos-atomicos',
+    label: 'Hábitos Atômicos',
+    primaryColor: '#18181B',
+    secondaryColor: '#F59E0B',
+    activeBorderColor: '#F59E0B',
   },
 ];
 
@@ -118,11 +125,11 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
         </p>
       </div>
 
-      {/* 1. Seletor de Tema do Crachá (Acima da Foto do Perfil) */}
+      {/* 1. Seletor de Tema do Crachá por Livro do Clube (Acima da Foto do Perfil) */}
       <div className="form-field-group">
         <span className="form-label">
-          <Palette size={15} />
-          <span>Tema do Crachá</span>
+          <BookOpen size={15} />
+          <span>Tema do Crachá (Livro do Clube)</span>
         </span>
         <div className="theme-selector-grid">
           {THEME_OPTIONS.map((theme) => {

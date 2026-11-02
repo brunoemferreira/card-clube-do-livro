@@ -258,63 +258,107 @@ textarea {
   border-bottom: 1.5px solid rgba(212, 175, 55, 0.32);
 }
 
+/* Tema Padrão / Livro 2: Mais Esperto que o Diabo (Carmesim & Ouro) */
 .banner-mesh-gradient {
   position: absolute;
   inset: 0;
   background:
     radial-gradient(circle at 20% 35%, rgba(212, 175, 55, 0.38) 0%, transparent 52%),
-    radial-gradient(circle at 82% 28%, rgba(220, 38, 38, 0.75) 0%, transparent 58%),
+    radial-gradient(circle at 82% 28%, rgba(220, 38, 38, 0.78) 0%, transparent 58%),
     linear-gradient(135deg, #3b040c 0%, #7f1d1d 52%, #1a0609 100%);
 }
 
-/* Tema 2: Noite & Ouro (Obsidiana & Dourado Puro) */
-.theme-espresso-bronze .banner-mesh-gradient {
+/* Livro 1: A Tríade do Tempo (Azul Royal, Ciano & Ouro) */
+.theme-triade-do-tempo .banner-mesh-gradient {
   background:
-    radial-gradient(circle at 78% 28%, rgba(245, 158, 11, 0.55) 0%, transparent 52%),
-    radial-gradient(circle at 20% 70%, rgba(212, 175, 55, 0.3) 0%, transparent 58%),
-    linear-gradient(135deg, #09090b 0%, #1c1917 52%, #0a0a0c 100%);
+    radial-gradient(circle at 80% 25%, rgba(56, 189, 248, 0.6) 0%, transparent 52%),
+    radial-gradient(circle at 20% 45%, rgba(250, 204, 21, 0.35) 0%, transparent 55%),
+    linear-gradient(135deg, #0b193c 0%, #1d4ed8 55%, #091326 100%);
 }
 
-.theme-espresso-bronze .badge-lanyard-strap {
-  background: linear-gradient(90deg, #09090b 0%, #1f1f23 50%, #09090b 100%);
+.theme-triade-do-tempo .badge-lanyard-strap {
+  background: linear-gradient(90deg, #091326 0%, #1e3a8a 50%, #091326 100%);
 }
 
-.theme-espresso-bronze .badge-avatar-frame {
-  background: linear-gradient(135deg, #fde047 0%, #92400e 50%, #f59e0b 100%);
+.theme-triade-do-tempo .badge-avatar-frame {
+  background: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 50%, #fde047 100%);
 }
 
-.theme-espresso-bronze .badge-transformation-box {
+.theme-triade-do-tempo .badge-transformation-box {
   background: linear-gradient(
     180deg,
-    rgba(245, 158, 11, 0.16) 0%,
-    rgba(15, 15, 18, 0.85) 100%
+    rgba(29, 78, 216, 0.24) 0%,
+    rgba(9, 19, 38, 0.85) 100%
   );
-  border-color: rgba(245, 158, 11, 0.38);
+  border-color: rgba(56, 189, 248, 0.38);
 }
 
-/* Tema 3: Esmeralda & Ouro (Verde Biblioteca Imperial & Ouro) */
-.theme-royal-crimson .banner-mesh-gradient {
+.theme-triade-do-tempo .badge-selected-book-pill {
+  background: rgba(29, 78, 216, 0.22);
+  border-color: rgba(56, 189, 248, 0.45);
+  color: #bae6fd;
+}
+
+/* Livro 3: A Montanha (Verde Esmeralda Alpino & Ouro) */
+.theme-a-montanha .banner-mesh-gradient {
   background:
-    radial-gradient(circle at 80% 25%, rgba(16, 185, 129, 0.55) 0%, transparent 50%),
+    radial-gradient(circle at 80% 25%, rgba(16, 185, 129, 0.58) 0%, transparent 50%),
     radial-gradient(circle at 22% 40%, rgba(250, 204, 21, 0.38) 0%, transparent 55%),
     linear-gradient(135deg, #022c22 0%, #065f46 55%, #041f18 100%);
 }
 
-.theme-royal-crimson .badge-lanyard-strap {
+.theme-a-montanha .badge-lanyard-strap {
   background: linear-gradient(90deg, #031c16 0%, #064e3b 50%, #031c16 100%);
 }
 
-.theme-royal-crimson .badge-avatar-frame {
+.theme-a-montanha .badge-avatar-frame {
   background: linear-gradient(135deg, #fde047 0%, #059669 50%, #d4af37 100%);
 }
 
-.theme-royal-crimson .badge-transformation-box {
+.theme-a-montanha .badge-transformation-box {
   background: linear-gradient(
     180deg,
     rgba(5, 150, 105, 0.22) 0%,
     rgba(6, 24, 19, 0.85) 100%
   );
   border-color: rgba(16, 185, 129, 0.38);
+}
+
+.theme-a-montanha .badge-selected-book-pill {
+  background: rgba(5, 150, 105, 0.22);
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #a7f3d0;
+}
+
+/* Livro 4: Hábitos Atômicos (Obsidiana Atômica & Ouro Solar) */
+.theme-habitos-atomicos .banner-mesh-gradient {
+  background:
+    radial-gradient(circle at 78% 28%, rgba(245, 158, 11, 0.58) 0%, transparent 52%),
+    radial-gradient(circle at 20% 70%, rgba(212, 175, 55, 0.32) 0%, transparent 58%),
+    linear-gradient(135deg, #09090b 0%, #27272a 52%, #0a0a0c 100%);
+}
+
+.theme-habitos-atomicos .badge-lanyard-strap {
+  background: linear-gradient(90deg, #09090b 0%, #27272a 50%, #09090b 100%);
+}
+
+.theme-habitos-atomicos .badge-avatar-frame {
+  background: linear-gradient(135deg, #fde047 0%, #b45309 50%, #f59e0b 100%);
+}
+
+.theme-habitos-atomicos .badge-transformation-box {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 158, 11, 0.18) 0%,
+    rgba(15, 15, 18, 0.85) 100%
+  );
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.theme-habitos-atomicos .badge-selected-book-pill {
+  background: rgba(245, 158, 11, 0.18);
+  border-color: rgba(245, 158, 11, 0.45);
+  color: #fde68a;
 }
 
 .banner-gold-lines {
@@ -589,6 +633,28 @@ textarea {
   flex-shrink: 0;
 }
 
+.badge-selected-book-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.42rem;
+  padding: 0.26rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(220, 38, 38, 0.2);
+  border: 1px solid rgba(246, 226, 156, 0.42);
+  color: var(--clube-gold-light);
+  font-size: 0.7rem;
+}
+
+.badge-selected-book-pill strong {
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.book-pill-icon {
+  flex-shrink: 0;
+}
+
 /* Caixa da Pergunta: O que busca transformar através da leitura */
 .badge-transformation-box {
   width: 100%;
@@ -853,19 +919,19 @@ textarea {
   line-height: 1.35;
 }
 
-/* Seletor de Tema do Crachá (3 opções bem definidas desde o mobile) */
+/* Seletor de Tema do Crachá por Livro (4 livros bem definidos) */
 .theme-selector-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.45rem;
 }
 
 .theme-option-btn {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.48rem;
-  padding: 0.46rem 0.5rem;
+  padding: 0.44rem 0.6rem;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.04);
   border: 1.5px solid rgba(255, 255, 255, 0.12);
@@ -874,7 +940,7 @@ textarea {
   font-weight: 700;
   cursor: pointer;
   transition: all 0.18s ease;
-  white-space: nowrap;
+  text-align: left;
 }
 
 .theme-option-btn:hover {
@@ -888,16 +954,20 @@ textarea {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
 }
 
-.theme-btn-burgundy-gold.active {
-  background: linear-gradient(135deg, rgba(220, 38, 38, 0.24) 0%, rgba(250, 204, 21, 0.12) 100%);
+.theme-btn-triade-do-tempo.active {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.28) 0%, rgba(56, 189, 248, 0.14) 100%);
 }
 
-.theme-btn-espresso-bronze.active {
-  background: linear-gradient(135deg, rgba(24, 24, 27, 0.85) 0%, rgba(245, 158, 11, 0.22) 100%);
+.theme-btn-mais-esperto-que-o-diabo.active {
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.26) 0%, rgba(250, 204, 21, 0.12) 100%);
 }
 
-.theme-btn-royal-crimson.active {
-  background: linear-gradient(135deg, rgba(5, 150, 105, 0.26) 0%, rgba(253, 224, 71, 0.12) 100%);
+.theme-btn-a-montanha.active {
+  background: linear-gradient(135deg, rgba(5, 150, 105, 0.28) 0%, rgba(253, 224, 71, 0.12) 100%);
+}
+
+.theme-btn-habitos-atomicos.active {
+  background: linear-gradient(135deg, rgba(24, 24, 27, 0.85) 0%, rgba(245, 158, 11, 0.24) 100%);
 }
 
 .theme-swatch-split {

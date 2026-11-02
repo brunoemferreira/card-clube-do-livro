@@ -2,9 +2,10 @@ import { CardThemeAccent, MemberCard } from '@domain/entities/MemberCard';
 import { CardUrlStatePort } from '@domain/ports/CardUrlStatePort';
 
 const VALID_THEMES: readonly CardThemeAccent[] = [
-  'burgundy-gold',
-  'espresso-bronze',
-  'royal-crimson',
+  'triade-do-tempo',
+  'mais-esperto-que-o-diabo',
+  'a-montanha',
+  'habitos-atomicos',
 ];
 
 export class BrowserUrlCardStateAdapter implements CardUrlStatePort {
@@ -27,7 +28,7 @@ export class BrowserUrlCardStateAdapter implements CardUrlStatePort {
     if (card.memberSince.trim()) {
       searchParams.set('desde', card.memberSince.trim());
     }
-    if (card.themeAccent !== 'burgundy-gold') {
+    if (card.themeAccent !== 'mais-esperto-que-o-diabo') {
       searchParams.set('tema', card.themeAccent);
     }
 
@@ -52,7 +53,7 @@ export class BrowserUrlCardStateAdapter implements CardUrlStatePort {
     const themeAccent: CardThemeAccent =
       rawTheme && VALID_THEMES.includes(rawTheme as CardThemeAccent)
         ? (rawTheme as CardThemeAccent)
-        : 'burgundy-gold';
+        : 'mais-esperto-que-o-diabo';
 
     return MemberCard.create({
       fullName: fullName ?? '',

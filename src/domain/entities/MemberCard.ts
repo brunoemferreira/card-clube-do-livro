@@ -1,4 +1,8 @@
-export type CardThemeAccent = 'burgundy-gold' | 'espresso-bronze' | 'royal-crimson';
+export type CardThemeAccent =
+  | 'triade-do-tempo'
+  | 'mais-esperto-que-o-diabo'
+  | 'a-montanha'
+  | 'habitos-atomicos';
 
 export interface PhotoAlignment {
   readonly zoom: number;
@@ -26,6 +30,13 @@ export const DEFAULT_PHOTO_ALIGNMENT: PhotoAlignment = {
   zoom: 1,
   offsetX: 0,
   offsetY: 0,
+};
+
+const BOOK_THEME_TITLES: Record<CardThemeAccent, string> = {
+  'triade-do-tempo': 'A Tríade do Tempo',
+  'mais-esperto-que-o-diabo': 'Mais Esperto que o Diabo',
+  'a-montanha': 'A Montanha',
+  'habitos-atomicos': 'Hábitos Atômicos',
 };
 
 export class MemberCard {
@@ -64,7 +75,7 @@ export class MemberCard {
       photoDataUrl: props.photoDataUrl ?? null,
       photoAlignment: props.photoAlignment ?? DEFAULT_PHOTO_ALIGNMENT,
       memberSince: props.memberSince ?? todayFormatted,
-      themeAccent: props.themeAccent ?? 'burgundy-gold',
+      themeAccent: props.themeAccent ?? 'mais-esperto-que-o-diabo',
     });
   }
 
@@ -90,6 +101,10 @@ export class MemberCard {
       ...this.photoAlignment,
       ...partialAlignment,
     });
+  }
+
+  public getBookTitle(): string {
+    return BOOK_THEME_TITLES[this.themeAccent];
   }
 
   public getDisplayName(): string {
@@ -171,12 +186,14 @@ export class MemberCard {
   public buildWhatsAppCaption(): string {
     const name = this.getDisplayName();
     const location = this.getDisplayCityState();
+    const book = this.getBookTitle();
     const goal = this.getDisplayTransformationGoal();
 
     return [
       `📚✨ *Embarquei no Clube do Livro | Livros & Negócios!*`,
       ``,
       `👤 *Membro:* ${name} (${location})`,
+      `📖 *Leitura do Clube:* ${book}`,
       `🎯 *O que busco transformar através da leitura:*`,
       `"${goal}"`,
     ].join('\n');

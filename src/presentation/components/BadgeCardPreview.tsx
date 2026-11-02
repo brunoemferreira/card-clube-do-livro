@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import {
+  BookMarked,
   BookOpen,
   Camera,
   Flame,
@@ -82,6 +83,7 @@ export const BadgeCardPreview: React.FC<BadgeCardPreviewProps> = ({
   const displayName = card.getDisplayName();
   const displayLocation = card.getDisplayCityState();
   const displayGoal = card.getDisplayTransformationGoal();
+  const bookTitle = card.getBookTitle();
   const initials = card.getInitials();
 
   return (
@@ -140,7 +142,7 @@ export const BadgeCardPreview: React.FC<BadgeCardPreviewProps> = ({
             </button>
           </div>
 
-          {/* Foto do Membro com Suporte a Arrastar para Alinhar + Selo Dourado */}
+          {/* Foto do Membro com Suporte a Arrastar para Alinhar */}
           <div className="badge-avatar-section">
             <div
               className={`badge-avatar-frame ${card.photoDataUrl ? 'has-photo' : ''} ${
@@ -209,6 +211,12 @@ export const BadgeCardPreview: React.FC<BadgeCardPreviewProps> = ({
             <div className="badge-location-row">
               <MapPin size={14} className="location-pin-icon" />
               <span>{displayLocation}</span>
+            </div>
+
+            {/* Badge do Livro Selecionado no Clube do Livro */}
+            <div className="badge-selected-book-pill">
+              <BookMarked size={13} className="book-pill-icon" />
+              <span>Livro: <strong>{bookTitle}</strong></span>
             </div>
 
             {/* Bloco da Pergunta de Transformação */}
