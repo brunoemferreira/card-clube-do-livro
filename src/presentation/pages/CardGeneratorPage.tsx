@@ -13,7 +13,8 @@ export const CardGeneratorPage: React.FC = () => {
     isUploadingAvatar,
     feedback,
     updateFullName,
-    updateCityState,
+    updateCity,
+    updateState,
     updateTransformationGoal,
     updateThemeAccent,
     updatePhotoAlignment,
@@ -80,7 +81,8 @@ export const CardGeneratorPage: React.FC = () => {
             fileInputRef={fileInputRef}
             isUploadingAvatar={isUploadingAvatar}
             onUpdateFullName={updateFullName}
-            onUpdateCityState={updateCityState}
+            onUpdateCity={updateCity}
+            onUpdateState={updateState}
             onUpdateTransformationGoal={updateTransformationGoal}
             onUpdateThemeAccent={updateThemeAccent}
             onUpdatePhotoAlignment={updatePhotoAlignment}

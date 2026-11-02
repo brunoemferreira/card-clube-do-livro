@@ -25,7 +25,8 @@ export interface CardEditorFormProps {
   readonly fileInputRef: React.RefObject<HTMLInputElement | null>;
   readonly isUploadingAvatar: boolean;
   readonly onUpdateFullName: (value: string) => void;
-  readonly onUpdateCityState: (value: string) => void;
+  readonly onUpdateCity: (value: string) => void;
+  readonly onUpdateState: (value: string) => void;
   readonly onUpdateTransformationGoal: (value: string) => void;
   readonly onUpdateThemeAccent: (value: CardThemeAccent) => void;
   readonly onUpdatePhotoAlignment: (partial: Partial<PhotoAlignment>) => void;
@@ -33,6 +34,12 @@ export interface CardEditorFormProps {
   readonly onAvatarFileSelected: (file: File | null) => void;
   readonly onRemoveAvatar: () => void;
 }
+
+const BRAZILIAN_UFS: readonly string[] = [
+  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO',
+  'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI',
+  'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO',
+];
 
 const TRANSFORMATION_SUGGESTIONS: readonly string[] = [
   'Desenvolver inteligência emocional, liderança e transformar leitura em resultados reais nos negócios.',
@@ -76,7 +83,8 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
   fileInputRef,
   isUploadingAvatar,
   onUpdateFullName,
-  onUpdateCityState,
+  onUpdateCity,
+  onUpdateState,
   onUpdateTransformationGoal,
   onUpdateThemeAccent,
   onUpdatePhotoAlignment,
@@ -288,8 +296,8 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
         </div>
       </div>
 
-      {/* 3. Nome e Cidade/Estado */}
-      <div className="form-row-grid">
+      {/* 3. Nome, Cidade e Estado Separados */}
+      <div className="form-row-three-cols">
         <div className="form-field-group">
           <label className="form-label" htmlFor="member-name-input">
             <User size={15} />
@@ -307,19 +315,41 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
         </div>
 
         <div className="form-field-group">
-          <label className="form-label" htmlFor="member-location-input">
+          <label className="form-label" htmlFor="member-city-input">
             <MapPin size={15} />
-            <span>Cidade / Estado</span>
+            <span>Cidade</span>
           </label>
           <input
-            id="member-location-input"
+            id="member-city-input"
             type="text"
             className="form-text-input"
-            placeholder="Ex.: São Paulo / SP"
-            maxLength={38}
-            value={card.cityState}
-            onChange={(e) => onUpdateCityState(e.target.value)}
+            placeholder="Ex.: São Paulo"
+            maxLength={32}
+            value={card.city}
+            onChange={(e) => onUpdateCity(e.target.value)}
           />
+        </div>
+
+        <div className="form-field-group">
+          <label className="form-label" htmlFor="member-state-input">
+            <MapPin size={15} />
+            <span>Estado</span>
+          </label>
+          <input
+            id="member-state-input"
+            type="text"
+            list="brazilian-uf-datalist"
+            className="form-text-input"
+            placeholder="Ex.: SP"
+            maxLength={20}
+            value={card.state}
+            onChange={(e) => onUpdateState(e.target.value)}
+          />
+          <datalist id="brazilian-uf-datalist">
+            {BRAZILIAN_UFS.map((uf) => (
+              <option key={uf} value={uf} />
+            ))}
+          </datalist>
         </div>
       </div>
 

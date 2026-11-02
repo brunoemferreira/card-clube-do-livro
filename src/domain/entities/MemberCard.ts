@@ -8,7 +8,8 @@ export interface PhotoAlignment {
 
 export interface MemberCardProps {
   readonly fullName: string;
-  readonly cityState: string;
+  readonly city: string;
+  readonly state: string;
   readonly readingTransformationGoal: string;
   readonly photoDataUrl: string | null;
   readonly photoAlignment: PhotoAlignment;
@@ -29,7 +30,8 @@ export const DEFAULT_PHOTO_ALIGNMENT: PhotoAlignment = {
 
 export class MemberCard {
   public readonly fullName: string;
-  public readonly cityState: string;
+  public readonly city: string;
+  public readonly state: string;
   public readonly readingTransformationGoal: string;
   public readonly photoDataUrl: string | null;
   public readonly photoAlignment: PhotoAlignment;
@@ -38,7 +40,8 @@ export class MemberCard {
 
   private constructor(props: MemberCardProps) {
     this.fullName = props.fullName;
-    this.cityState = props.cityState;
+    this.city = props.city;
+    this.state = props.state;
     this.readingTransformationGoal = props.readingTransformationGoal;
     this.photoDataUrl = props.photoDataUrl;
     this.photoAlignment = props.photoAlignment;
@@ -55,7 +58,8 @@ export class MemberCard {
 
     return new MemberCard({
       fullName: props.fullName ?? '',
-      cityState: props.cityState ?? '',
+      city: props.city ?? '',
+      state: props.state ?? '',
       readingTransformationGoal: props.readingTransformationGoal ?? '',
       photoDataUrl: props.photoDataUrl ?? null,
       photoAlignment: props.photoAlignment ?? DEFAULT_PHOTO_ALIGNMENT,
@@ -70,7 +74,8 @@ export class MemberCard {
   ): MemberCard {
     return new MemberCard({
       fullName: this.fullName,
-      cityState: this.cityState,
+      city: this.city,
+      state: this.state,
       readingTransformationGoal: this.readingTransformationGoal,
       photoDataUrl: this.photoDataUrl,
       photoAlignment: this.photoAlignment,
@@ -92,26 +97,20 @@ export class MemberCard {
     return trimmed.length > 0 ? trimmed : 'Seu Nome Completo';
   }
 
-  public getDisplayHandle(): string {
-    const trimmed = this.fullName.trim();
-    if (!trimmed) {
-      return '@membro.clubedolivro';
-    }
-    const normalized = trimmed
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, '')
-      .trim()
-      .split(/\s+/)
-      .slice(0, 2)
-      .join('.');
-    return `@${normalized || 'leitor'}`;
-  }
-
   public getDisplayCityState(): string {
-    const trimmed = this.cityState.trim();
-    return trimmed.length > 0 ? trimmed : 'Sua Cidade / UF';
+    const trimmedCity = this.city.trim();
+    const trimmedState = this.state.trim();
+
+    if (trimmedCity && trimmedState) {
+      return `${trimmedCity} / ${trimmedState}`;
+    }
+    if (trimmedCity) {
+      return trimmedCity;
+    }
+    if (trimmedState) {
+      return trimmedState;
+    }
+    return 'Sua Cidade / UF';
   }
 
   public getDisplayTransformationGoal(): string {
@@ -153,8 +152,11 @@ export class MemberCard {
     if (this.fullName.trim().length === 0) {
       missingFields.push('Nome');
     }
-    if (this.cityState.trim().length === 0) {
-      missingFields.push('Cidade / Estado');
+    if (this.city.trim().length === 0) {
+      missingFields.push('Cidade');
+    }
+    if (this.state.trim().length === 0) {
+      missingFields.push('Estado');
     }
     if (this.readingTransformationGoal.trim().length === 0) {
       missingFields.push('Objetivo de transformação com a leitura');
@@ -183,7 +185,8 @@ export class MemberCard {
   public toPrimitives(): MemberCardProps {
     return {
       fullName: this.fullName,
-      cityState: this.cityState,
+      city: this.city,
+      state: this.state,
       readingTransformationGoal: this.readingTransformationGoal,
       photoDataUrl: this.photoDataUrl,
       photoAlignment: this.photoAlignment,

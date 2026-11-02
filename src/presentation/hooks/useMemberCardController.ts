@@ -39,7 +39,6 @@ export function useMemberCardController() {
   );
 
   // Renderiza em tempo real a foto com o alinhamento (horizontal, vertical e zoom) em um canvas quadrado
-  // garantindo que na exportação PNG para o WhatsApp a foto saia exatamente como alinhada.
   useEffect(() => {
     if (!card.photoDataUrl) {
       setAlignedPhotoDataUrl(null);
@@ -96,8 +95,12 @@ export function useMemberCardController() {
     setCard((prev) => prev.withUpdatedField('fullName', value));
   }, []);
 
-  const updateCityState = useCallback((value: string) => {
-    setCard((prev) => prev.withUpdatedField('cityState', value));
+  const updateCity = useCallback((value: string) => {
+    setCard((prev) => prev.withUpdatedField('city', value));
+  }, []);
+
+  const updateState = useCallback((value: string) => {
+    setCard((prev) => prev.withUpdatedField('state', value));
   }, []);
 
   const updateTransformationGoal = useCallback((value: string) => {
@@ -231,7 +234,8 @@ export function useMemberCardController() {
     isUploadingAvatar,
     feedback,
     updateFullName,
-    updateCityState,
+    updateCity,
+    updateState,
     updateTransformationGoal,
     updateThemeAccent,
     updatePhotoAlignment,
