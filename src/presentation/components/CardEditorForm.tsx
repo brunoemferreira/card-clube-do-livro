@@ -57,9 +57,9 @@ const THEME_OPTIONS: ReadonlyArray<{
   {
     id: 'triade-do-tempo',
     label: 'Tríade do Tempo',
-    primaryColor: '#2563EB',
-    secondaryColor: '#38BDF8',
-    activeBorderColor: '#38BDF8',
+    primaryColor: '#F97316',
+    secondaryColor: '#FFFFFF',
+    activeBorderColor: '#F97316',
   },
   {
     id: 'mais-esperto-que-o-diabo',
@@ -71,16 +71,16 @@ const THEME_OPTIONS: ReadonlyArray<{
   {
     id: 'a-montanha',
     label: 'A Montanha',
-    primaryColor: '#059669',
-    secondaryColor: '#FDE047',
-    activeBorderColor: '#10B981',
+    primaryColor: '#121214',
+    secondaryColor: '#EAB308',
+    activeBorderColor: '#EAB308',
   },
   {
     id: 'habitos-atomicos',
     label: 'Hábitos Atômicos',
-    primaryColor: '#18181B',
-    secondaryColor: '#F59E0B',
-    activeBorderColor: '#F59E0B',
+    primaryColor: '#F5EFE6',
+    secondaryColor: '#A66E24',
+    activeBorderColor: '#C88A36',
   },
 ];
 

@@ -90,3 +90,4 @@ O projeto está configurado com `base: './'` no [`vite.config.ts`](./vite.config
 ```bash
 npm run deploy
 ```
+
