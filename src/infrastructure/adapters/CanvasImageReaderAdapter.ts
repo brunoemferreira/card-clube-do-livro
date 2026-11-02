@@ -1,11 +1,11 @@
 import { ImageReaderPort } from '@domain/ports/ImageReaderPort';
 
-const TARGET_AVATAR_SIZE_PX = 640;
+const MAX_IMAGE_DIMENSION_PX = 1200;
 
 export class CanvasImageReaderAdapter implements ImageReaderPort {
-  public async readAndOptimizeSquareAvatar(file: File): Promise<string> {
+  public async readFullImagePreserveAspect(file: File): Promise<string> {
     const rawDataUrl = await this.readFileAsDataUrl(file);
-    return this.cropCenterSquare(rawDataUrl, TARGET_AVATAR_SIZE_PX);
+    return this.resizePreservingAspect(rawDataUrl, MAX_IMAGE_DIMENSION_PX);
   }
 
   private readFileAsDataUrl(file: File): Promise<string> {
@@ -23,13 +23,23 @@ export class CanvasImageReaderAdapter implements ImageReaderPort {
     });
   }
 
-  private cropCenterSquare(sourceDataUrl: string, sizePx: number): Promise<string> {
+  private resizePreservingAspect(
+    sourceDataUrl: string,
+    maxDimensionPx: number,
+  ): Promise<string> {
     return new Promise((resolve, reject) => {
       const image = new Image();
       image.onload = () => {
+        const scale = Math.min(
+          1,
+          maxDimensionPx / Math.max(image.width, image.height),
+        );
+        const targetWidth = Math.round(image.width * scale);
+        const targetHeight = Math.round(image.height * scale);
+
         const canvas = document.createElement('canvas');
-        canvas.width = sizePx;
-        canvas.height = sizePx;
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
 
         const context = canvas.getContext('2d');
         if (!context) {
@@ -37,23 +47,8 @@ export class CanvasImageReaderAdapter implements ImageReaderPort {
           return;
         }
 
-        const shortestSide = Math.min(image.width, image.height);
-        const sourceX = (image.width - shortestSide) / 2;
-        const sourceY = (image.height - shortestSide) / 2;
-
-        context.drawImage(
-          image,
-          sourceX,
-          sourceY,
-          shortestSide,
-          shortestSide,
-          0,
-          0,
-          sizePx,
-          sizePx,
-        );
-
-        resolve(canvas.toDataURL('image/jpeg', 0.92));
+        context.drawImage(image, 0, 0, targetWidth, targetHeight);
+        resolve(canvas.toDataURL('image/jpeg', 0.94));
       };
       image.onerror = () => reject(new Error('Imagem inválida ou corrompida.'));
       image.src = sourceDataUrl;

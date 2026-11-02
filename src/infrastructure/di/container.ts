@@ -24,14 +24,13 @@ export function createApplicationContainer(): ApplicationContainer {
     shareCardViaWhatsAppUseCase: new ShareCardViaWhatsAppUseCase({
       imageGenerator,
       cardShare,
-      urlState,
     }),
     downloadCardImageUseCase: new DownloadCardImageUseCase({
       imageGenerator,
       cardShare,
     }),
     uploadCardAvatarUseCase: new UploadCardAvatarUseCase(imageReader),
-    syncCardUrlStateUseCase: new SyncCardUrlStateUseCase(urlState, cardShare),
+    syncCardUrlStateUseCase: new SyncCardUrlStateUseCase(urlState),
   };
 }
 

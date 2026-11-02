@@ -59,3 +59,4 @@ export class BrowserUrlCardStateAdapter implements CardUrlStatePort {
     });
   }
 }
+
