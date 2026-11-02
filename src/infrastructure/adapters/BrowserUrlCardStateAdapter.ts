@@ -28,7 +28,7 @@ export class BrowserUrlCardStateAdapter implements CardUrlStatePort {
     if (card.memberSince.trim()) {
       searchParams.set('desde', card.memberSince.trim());
     }
-    if (card.themeAccent !== 'mais-esperto-que-o-diabo') {
+    if (card.themeAccent !== 'habitos-atomicos') {
       searchParams.set('tema', card.themeAccent);
     }
 
@@ -53,7 +53,7 @@ export class BrowserUrlCardStateAdapter implements CardUrlStatePort {
     const themeAccent: CardThemeAccent =
       rawTheme && VALID_THEMES.includes(rawTheme as CardThemeAccent)
         ? (rawTheme as CardThemeAccent)
-        : 'mais-esperto-que-o-diabo';
+        : 'habitos-atomicos';
 
     return MemberCard.create({
       fullName: fullName ?? '',

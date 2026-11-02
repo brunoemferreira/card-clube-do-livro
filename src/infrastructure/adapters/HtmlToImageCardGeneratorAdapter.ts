@@ -93,7 +93,7 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
 
     const themeKey = this.extractThemeFromElement(element);
     const palette =
-      THEME_PALETTES[themeKey] ?? THEME_PALETTES['mais-esperto-que-o-diabo'];
+      THEME_PALETTES[themeKey] ?? THEME_PALETTES['habitos-atomicos'];
 
     const memberName =
       element.querySelector('.badge-member-name')?.textContent?.trim() ||
@@ -594,7 +594,7 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
         return className.replace('theme-', '');
       }
     }
-    return 'mais-esperto-que-o-diabo';
+    return 'habitos-atomicos';
   }
 
   private wrapText(

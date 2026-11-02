@@ -75,7 +75,7 @@ export class MemberCard {
       photoDataUrl: props.photoDataUrl ?? null,
       photoAlignment: props.photoAlignment ?? DEFAULT_PHOTO_ALIGNMENT,
       memberSince: props.memberSince ?? todayFormatted,
-      themeAccent: props.themeAccent ?? 'mais-esperto-que-o-diabo',
+      themeAccent: props.themeAccent ?? 'habitos-atomicos',
     });
   }
 
