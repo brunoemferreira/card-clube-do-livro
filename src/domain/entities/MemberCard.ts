@@ -1,10 +1,17 @@
 export type CardThemeAccent = 'burgundy-gold' | 'espresso-bronze' | 'royal-crimson';
 
+export interface PhotoAlignment {
+  readonly zoom: number;
+  readonly offsetX: number;
+  readonly offsetY: number;
+}
+
 export interface MemberCardProps {
   readonly fullName: string;
   readonly cityState: string;
   readonly readingTransformationGoal: string;
   readonly photoDataUrl: string | null;
+  readonly photoAlignment: PhotoAlignment;
   readonly memberSince: string;
   readonly themeAccent: CardThemeAccent;
 }
@@ -14,11 +21,18 @@ export interface MemberCardValidationResult {
   readonly missingFields: readonly string[];
 }
 
+export const DEFAULT_PHOTO_ALIGNMENT: PhotoAlignment = {
+  zoom: 1,
+  offsetX: 0,
+  offsetY: 0,
+};
+
 export class MemberCard {
   public readonly fullName: string;
   public readonly cityState: string;
   public readonly readingTransformationGoal: string;
   public readonly photoDataUrl: string | null;
+  public readonly photoAlignment: PhotoAlignment;
   public readonly memberSince: string;
   public readonly themeAccent: CardThemeAccent;
 
@@ -27,6 +41,7 @@ export class MemberCard {
     this.cityState = props.cityState;
     this.readingTransformationGoal = props.readingTransformationGoal;
     this.photoDataUrl = props.photoDataUrl;
+    this.photoAlignment = props.photoAlignment;
     this.memberSince = props.memberSince;
     this.themeAccent = props.themeAccent;
   }
@@ -43,6 +58,7 @@ export class MemberCard {
       cityState: props.cityState ?? '',
       readingTransformationGoal: props.readingTransformationGoal ?? '',
       photoDataUrl: props.photoDataUrl ?? null,
+      photoAlignment: props.photoAlignment ?? DEFAULT_PHOTO_ALIGNMENT,
       memberSince: props.memberSince ?? todayFormatted,
       themeAccent: props.themeAccent ?? 'burgundy-gold',
     });
@@ -57,9 +73,17 @@ export class MemberCard {
       cityState: this.cityState,
       readingTransformationGoal: this.readingTransformationGoal,
       photoDataUrl: this.photoDataUrl,
+      photoAlignment: this.photoAlignment,
       memberSince: this.memberSince,
       themeAccent: this.themeAccent,
       [field]: value,
+    });
+  }
+
+  public withUpdatedPhotoAlignment(partialAlignment: Partial<PhotoAlignment>): MemberCard {
+    return this.withUpdatedField('photoAlignment', {
+      ...this.photoAlignment,
+      ...partialAlignment,
     });
   }
 
@@ -142,7 +166,7 @@ export class MemberCard {
     };
   }
 
-  public buildWhatsAppShareMessage(shareableUrl: string): string {
+  public buildWhatsAppCaption(): string {
     const name = this.getDisplayName();
     const location = this.getDisplayCityState();
     const goal = this.getDisplayTransformationGoal();
@@ -150,13 +174,9 @@ export class MemberCard {
     return [
       `📚✨ *Embarquei no Clube do Livro | Livros & Negócios!*`,
       ``,
-      `👤 *Membro:* ${name}`,
-      `📍 *Local:* ${location}`,
+      `👤 *Membro:* ${name} (${location})`,
       `🎯 *O que busco transformar através da leitura:*`,
       `"${goal}"`,
-      ``,
-      `🔗 Veja meu Card Oficial ou gere o seu também:`,
-      shareableUrl,
     ].join('\n');
   }
 
@@ -166,6 +186,7 @@ export class MemberCard {
       cityState: this.cityState,
       readingTransformationGoal: this.readingTransformationGoal,
       photoDataUrl: this.photoDataUrl,
+      photoAlignment: this.photoAlignment,
       memberSince: this.memberSince,
       themeAccent: this.themeAccent,
     };

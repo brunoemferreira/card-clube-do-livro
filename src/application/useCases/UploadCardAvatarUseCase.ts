@@ -1,4 +1,4 @@
-import { MemberCard } from '@domain/entities/MemberCard';
+import { DEFAULT_PHOTO_ALIGNMENT, MemberCard } from '@domain/entities/MemberCard';
 import { ImageReaderPort } from '@domain/ports/ImageReaderPort';
 
 export class UploadCardAvatarUseCase {
@@ -9,7 +9,9 @@ export class UploadCardAvatarUseCase {
   }
 
   public async execute(card: MemberCard, file: File): Promise<MemberCard> {
-    const optimizedDataUrl = await this.imageReader.readAndOptimizeSquareAvatar(file);
-    return card.withUpdatedField('photoDataUrl', optimizedDataUrl);
+    const fullImageDataUrl = await this.imageReader.readFullImagePreserveAspect(file);
+    return card
+      .withUpdatedField('photoDataUrl', fullImageDataUrl)
+      .withUpdatedField('photoAlignment', DEFAULT_PHOTO_ALIGNMENT);
   }
 }

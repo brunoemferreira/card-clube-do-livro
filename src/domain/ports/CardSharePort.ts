@@ -1,20 +1,23 @@
 import { GeneratedCardImage } from './CardImageGeneratorPort';
 
-export type WhatsAppShareMethod = 'native-file-share' | 'whatsapp-web-with-download';
+export type WhatsAppShareMethod =
+  | 'native-file-share'
+  | 'clipboard-image-and-whatsapp'
+  | 'download-and-whatsapp';
 
 export interface WhatsAppShareOutcome {
   readonly method: WhatsAppShareMethod;
   readonly completed: boolean;
+  readonly cardImage: GeneratedCardImage;
 }
 
 export interface CardSharePort {
   shareViaWhatsApp(params: {
     readonly cardImage: GeneratedCardImage;
-    readonly message: string;
-    readonly shareUrl: string;
+    readonly caption: string;
   }): Promise<WhatsAppShareOutcome>;
 
   triggerImageDownload(cardImage: GeneratedCardImage): void;
 
-  copyTextToClipboard(text: string): Promise<boolean>;
+  copyImageToClipboard(cardImage: GeneratedCardImage): Promise<boolean>;
 }

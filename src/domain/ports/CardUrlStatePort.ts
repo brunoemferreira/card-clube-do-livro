@@ -4,3 +4,4 @@ export interface CardUrlStatePort {
   encodeCardToUrl(card: MemberCard): string;
   decodeCardFromCurrentUrl(): MemberCard | null;
 }
+

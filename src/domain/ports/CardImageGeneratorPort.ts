@@ -10,3 +10,4 @@ export interface CardImageGeneratorPort {
     fileNameWithoutExtension: string,
   ): Promise<GeneratedCardImage>;
 }
+

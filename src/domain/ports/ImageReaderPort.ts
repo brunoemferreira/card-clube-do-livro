@@ -1,3 +1,3 @@
 export interface ImageReaderPort {
-  readAndOptimizeSquareAvatar(file: File): Promise<string>;
+  readFullImagePreserveAspect(file: File): Promise<string>;
 }
