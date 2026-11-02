@@ -7,24 +7,21 @@ import { useMemberCardController } from '../hooks/useMemberCardController';
 export const CardGeneratorPage: React.FC = () => {
   const {
     card,
+    alignedPhotoDataUrl,
     exportableCardRef,
     isGeneratingImage,
     isUploadingAvatar,
     feedback,
-    copiedTarget,
-    shareableUrl,
-    embedCode,
-    whatsappMessagePreview,
     updateFullName,
     updateCityState,
     updateTransformationGoal,
     updateThemeAccent,
+    updatePhotoAlignment,
+    resetPhotoAlignment,
     handleAvatarFileSelected,
     removeAvatar,
     handleDownloadPng,
     handleShareWhatsApp,
-    handleCopyLink,
-    handleCopyEmbedOrText,
   } = useMemberCardController();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -35,7 +32,7 @@ export const CardGeneratorPage: React.FC = () => {
 
   return (
     <div className="app-split-layout">
-      {/* Coluna Esquerda: Visualização em Tempo Real do Crachá (ID Card) */}
+      {/* Coluna Esquerda Fixa: O Crachá fica sempre centralizado na tela mesmo ao rolar */}
       <aside className="left-preview-column" aria-label="Pré-visualização do Card">
         <div className="preview-sticky-wrapper">
           <div className="live-indicator-badge">
@@ -45,8 +42,10 @@ export const CardGeneratorPage: React.FC = () => {
 
           <BadgeCardPreview
             card={card}
+            alignedPhotoDataUrl={alignedPhotoDataUrl}
             exportRef={exportableCardRef}
             onTriggerPhotoUpload={triggerPhotoSelection}
+            onUpdatePhotoAlignment={updatePhotoAlignment}
           />
         </div>
       </aside>
@@ -77,30 +76,27 @@ export const CardGeneratorPage: React.FC = () => {
           {/* Formulário Interativo */}
           <CardEditorForm
             card={card}
+            alignedPhotoDataUrl={alignedPhotoDataUrl}
             fileInputRef={fileInputRef}
             isUploadingAvatar={isUploadingAvatar}
             onUpdateFullName={updateFullName}
             onUpdateCityState={updateCityState}
             onUpdateTransformationGoal={updateTransformationGoal}
             onUpdateThemeAccent={updateThemeAccent}
+            onUpdatePhotoAlignment={updatePhotoAlignment}
+            onResetPhotoAlignment={resetPhotoAlignment}
             onAvatarFileSelected={handleAvatarFileSelected}
             onRemoveAvatar={removeAvatar}
           />
 
           <hr className="section-divider" />
 
-          {/* Painel de Compartilhamento (WhatsApp, PNG, Link, Embed) */}
+          {/* Painel de Compartilhamento (WhatsApp e Download PNG) */}
           <ShareActionsPanel
             isGeneratingImage={isGeneratingImage}
             feedback={feedback}
-            copiedTarget={copiedTarget}
-            shareableUrl={shareableUrl}
-            embedCode={embedCode}
-            whatsappMessagePreview={whatsappMessagePreview}
             onShareWhatsApp={handleShareWhatsApp}
             onDownloadPng={handleDownloadPng}
-            onCopyLink={handleCopyLink}
-            onCopyEmbedOrText={handleCopyEmbedOrText}
           />
         </div>
       </main>

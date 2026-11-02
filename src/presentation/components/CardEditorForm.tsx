@@ -1,23 +1,34 @@
 import React from 'react';
 import {
+  ArrowLeftRight,
+  ArrowUpDown,
   Camera,
   MapPin,
   Palette,
+  RotateCcw,
   Sparkles,
   Trash2,
   Upload,
   User,
+  ZoomIn,
 } from 'lucide-react';
-import { CardThemeAccent, MemberCard } from '@domain/entities/MemberCard';
+import {
+  CardThemeAccent,
+  MemberCard,
+  PhotoAlignment,
+} from '@domain/entities/MemberCard';
 
 export interface CardEditorFormProps {
   readonly card: MemberCard;
+  readonly alignedPhotoDataUrl: string | null;
   readonly fileInputRef: React.RefObject<HTMLInputElement | null>;
   readonly isUploadingAvatar: boolean;
   readonly onUpdateFullName: (value: string) => void;
   readonly onUpdateCityState: (value: string) => void;
   readonly onUpdateTransformationGoal: (value: string) => void;
   readonly onUpdateThemeAccent: (value: CardThemeAccent) => void;
+  readonly onUpdatePhotoAlignment: (partial: Partial<PhotoAlignment>) => void;
+  readonly onResetPhotoAlignment: () => void;
   readonly onAvatarFileSelected: (file: File | null) => void;
   readonly onRemoveAvatar: () => void;
 }
@@ -52,12 +63,15 @@ const THEME_OPTIONS: ReadonlyArray<{
 
 export const CardEditorForm: React.FC<CardEditorFormProps> = ({
   card,
+  alignedPhotoDataUrl,
   fileInputRef,
   isUploadingAvatar,
   onUpdateFullName,
   onUpdateCityState,
   onUpdateTransformationGoal,
   onUpdateThemeAccent,
+  onUpdatePhotoAlignment,
+  onResetPhotoAlignment,
   onAvatarFileSelected,
   onRemoveAvatar,
 }) => {
@@ -83,11 +97,11 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
         <span className="step-kicker">PASSO 1 • PERSONALIZAÇÃO AO VIVO</span>
         <h2 className="section-heading">Preencha seus dados de Membro</h2>
         <p className="section-subtitle">
-          À medida que você preenche, seu passaporte oficial ao lado é atualizado instantaneamente.
+          À medida que você preenche, sua credencial ao lado é atualizada em tempo real.
         </p>
       </div>
 
-      {/* Upload de Foto */}
+      {/* Upload e Alinhamento de Foto */}
       <div className="form-field-group">
         <label className="form-label" htmlFor="member-photo-input">
           <Camera size={15} />
@@ -109,10 +123,10 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
           />
 
           <div className="photo-upload-preview-row">
-            {card.photoDataUrl ? (
+            {alignedPhotoDataUrl ? (
               <img
-                src={card.photoDataUrl}
-                alt="Prévia da foto"
+                src={alignedPhotoDataUrl}
+                alt="Prévia da foto alinhada"
                 className="mini-avatar-thumb"
               />
             ) : (
@@ -151,6 +165,78 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
               )}
             </div>
           </div>
+
+          {/* Controles de Alinhamento da Foto (Evita cortar a cabeça) */}
+          {card.photoDataUrl && (
+            <div className="photo-alignment-panel">
+              <div className="alignment-panel-header">
+                <span className="alignment-title">
+                  Ajustar enquadramento da foto (ou arraste direto no crachá)
+                </span>
+                <button
+                  type="button"
+                  className="btn-reset-alignment"
+                  onClick={onResetPhotoAlignment}
+                >
+                  <RotateCcw size={12} />
+                  <span>Centralizar</span>
+                </button>
+              </div>
+
+              <div className="alignment-sliders-grid">
+                <label className="alignment-slider-item">
+                  <span className="slider-label">
+                    <ArrowUpDown size={13} /> Altura (Vertical)
+                  </span>
+                  <input
+                    type="range"
+                    min={-100}
+                    max={100}
+                    step={1}
+                    value={card.photoAlignment.offsetY}
+                    onChange={(e) =>
+                      onUpdatePhotoAlignment({ offsetY: Number(e.target.value) })
+                    }
+                    className="alignment-range-input"
+                  />
+                </label>
+
+                <label className="alignment-slider-item">
+                  <span className="slider-label">
+                    <ArrowLeftRight size={13} /> Posição (Horizontal)
+                  </span>
+                  <input
+                    type="range"
+                    min={-100}
+                    max={100}
+                    step={1}
+                    value={card.photoAlignment.offsetX}
+                    onChange={(e) =>
+                      onUpdatePhotoAlignment({ offsetX: Number(e.target.value) })
+                    }
+                    className="alignment-range-input"
+                  />
+                </label>
+
+                <label className="alignment-slider-item">
+                  <span className="slider-label">
+                    <ZoomIn size={13} /> Zoom ({Math.round(card.photoAlignment.zoom * 100)}%)
+                  </span>
+                  <input
+                    type="range"
+                    min={0.85}
+                    max={2.4}
+                    step={0.05}
+                    value={card.photoAlignment.zoom}
+                    onChange={(e) =>
+                      onUpdatePhotoAlignment({ zoom: Number(e.target.value) })
+                    }
+                    className="alignment-range-input"
+                  />
+                </label>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
