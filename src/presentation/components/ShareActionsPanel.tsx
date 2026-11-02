@@ -64,7 +64,7 @@ export const ShareActionsPanel: React.FC<ShareActionsPanelProps> = ({
             alt=""
             className="mini-footer-seal"
           />
-          <span>Conhecer a página oficial do Clube do Livro — Livros &amp; Negócios</span>
+          <span>Página oficial Clube do Livro - Livros e negócios</span>
           <ExternalLink size={12} />
         </a>
       </div>
