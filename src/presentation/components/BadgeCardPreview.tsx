@@ -188,16 +188,6 @@ export const BadgeCardPreview: React.FC<BadgeCardPreviewProps> = ({
                   </span>
                 </div>
               )}
-
-              {/* Selo Dourado Oficial em Destaque no Canto da Foto */}
-              <div className="badge-avatar-seal" title="Selo Oficial Clube do Livro">
-                <img
-                  src="./logo-clube.png"
-                  alt="Selo Clube do Livro"
-                  className="avatar-seal-img"
-                  crossOrigin="anonymous"
-                />
-              </div>
             </div>
           </div>
 
