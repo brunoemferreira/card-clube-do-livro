@@ -107,6 +107,10 @@ export class MemberCard {
     return BOOK_THEME_TITLES[this.themeAccent];
   }
 
+  public getTransformationPromptQuestion(): string {
+    return `O que você busca transformar na sua vida através da leitura de ${this.getBookTitle()}?`;
+  }
+
   public getDisplayName(): string {
     const trimmed = this.fullName.trim();
     return trimmed.length > 0 ? trimmed : 'Seu Nome Completo';
@@ -186,15 +190,14 @@ export class MemberCard {
   public buildWhatsAppCaption(): string {
     const name = this.getDisplayName();
     const location = this.getDisplayCityState();
-    const book = this.getBookTitle();
+    const question = this.getTransformationPromptQuestion();
     const goal = this.getDisplayTransformationGoal();
 
     return [
       `📚✨ *Embarquei no Clube do Livro | Livros & Negócios!*`,
       ``,
       `👤 *Membro:* ${name} (${location})`,
-      `📖 *Leitura do Clube:* ${book}`,
-      `🎯 *O que busco transformar através da leitura:*`,
+      `🎯 *${question}*`,
       `"${goal}"`,
     ].join('\n');
   }

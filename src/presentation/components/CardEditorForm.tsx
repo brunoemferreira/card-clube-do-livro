@@ -365,7 +365,7 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
         <div className="form-label-with-counter">
           <label className="form-label" htmlFor="member-goal-textarea">
             <Sparkles size={15} />
-            <span>O que você busca transformar na sua vida através da leitura?</span>
+            <span>{card.getTransformationPromptQuestion()}</span>
           </label>
           <span className="char-counter">
             {card.readingTransformationGoal.length}/180

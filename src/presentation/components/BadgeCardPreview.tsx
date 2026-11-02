@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import {
-  BookMarked,
   BookOpen,
   Camera,
   Flame,
@@ -83,7 +82,7 @@ export const BadgeCardPreview: React.FC<BadgeCardPreviewProps> = ({
   const displayName = card.getDisplayName();
   const displayLocation = card.getDisplayCityState();
   const displayGoal = card.getDisplayTransformationGoal();
-  const bookTitle = card.getBookTitle();
+  const transformationQuestion = card.getTransformationPromptQuestion();
   const initials = card.getInitials();
 
   return (
@@ -213,17 +212,11 @@ export const BadgeCardPreview: React.FC<BadgeCardPreviewProps> = ({
               <span>{displayLocation}</span>
             </div>
 
-            {/* Badge do Livro Selecionado no Clube do Livro */}
-            <div className="badge-selected-book-pill">
-              <BookMarked size={13} className="book-pill-icon" />
-              <span>Livro: <strong>{bookTitle}</strong></span>
-            </div>
-
-            {/* Bloco da Pergunta de Transformação */}
+            {/* Bloco da Pergunta de Transformação com o Livro Selecionado */}
             <div className="badge-transformation-box">
               <div className="transformation-header">
-                <Sparkles size={12} className="transformation-sparkle" />
-                <span>O QUE BUSCO TRANSFORMAR ATRAVÉS DA LEITURA</span>
+                <Sparkles size={13} className="transformation-sparkle" />
+                <span>{transformationQuestion}</span>
               </div>
               <p className="transformation-quote">“{displayGoal}”</p>
             </div>
