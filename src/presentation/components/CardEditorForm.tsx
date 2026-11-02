@@ -3,6 +3,7 @@ import {
   ArrowLeftRight,
   ArrowUpDown,
   Camera,
+  Check,
   MapPin,
   Palette,
   RotateCcw,
@@ -42,22 +43,30 @@ const TRANSFORMATION_SUGGESTIONS: readonly string[] = [
 const THEME_OPTIONS: ReadonlyArray<{
   readonly id: CardThemeAccent;
   readonly label: string;
-  readonly swatchGradient: string;
+  readonly primaryColor: string;
+  readonly secondaryColor: string;
+  readonly activeBorderColor: string;
 }> = [
   {
     id: 'burgundy-gold',
     label: 'Vinho & Ouro',
-    swatchGradient: 'linear-gradient(135deg, #7B0918 0%, #D4AF37 100%)',
+    primaryColor: '#DC2626',
+    secondaryColor: '#FACC15',
+    activeBorderColor: '#EF4444',
   },
   {
     id: 'espresso-bronze',
-    label: 'Café & Bronze',
-    swatchGradient: 'linear-gradient(135deg, #3B1F16 0%, #C88A4B 100%)',
+    label: 'Noite & Ouro',
+    primaryColor: '#18181B',
+    secondaryColor: '#F59E0B',
+    activeBorderColor: '#F59E0B',
   },
   {
     id: 'royal-crimson',
-    label: 'Rubi Imperial',
-    swatchGradient: 'linear-gradient(135deg, #990000 0%, #F5C451 100%)',
+    label: 'Esmeralda & Ouro',
+    primaryColor: '#059669',
+    secondaryColor: '#FDE047',
+    activeBorderColor: '#10B981',
   },
 ];
 
@@ -114,15 +123,26 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
               <button
                 key={theme.id}
                 type="button"
-                className={`theme-option-btn ${isSelected ? 'active' : ''}`}
+                className={`theme-option-btn theme-btn-${theme.id} ${
+                  isSelected ? 'active' : ''
+                }`}
                 onClick={() => onUpdateThemeAccent(theme.id)}
                 aria-pressed={isSelected}
+                style={
+                  isSelected
+                    ? { borderColor: theme.activeBorderColor }
+                    : undefined
+                }
               >
                 <span
-                  className="theme-swatch"
-                  style={{ background: theme.swatchGradient }}
-                />
-                <span>{theme.label}</span>
+                  className="theme-swatch-split"
+                  style={{
+                    background: `linear-gradient(135deg, ${theme.primaryColor} 0%, ${theme.primaryColor} 52%, ${theme.secondaryColor} 52%, ${theme.secondaryColor} 100%)`,
+                  }}
+                >
+                  {isSelected && <Check size={11} strokeWidth={3} className="swatch-check-icon" />}
+                </span>
+                <span className="theme-option-label">{theme.label}</span>
               </button>
             );
           })}
