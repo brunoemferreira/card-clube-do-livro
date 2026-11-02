@@ -318,7 +318,7 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
       <div className="form-field-group">
         <span className="form-label">
           <Palette size={15} />
-          <span>Acabamento do Crachá</span>
+          <span>Tema do Crachá</span>
         </span>
         <div className="theme-selector-grid">
           {THEME_OPTIONS.map((theme) => {
