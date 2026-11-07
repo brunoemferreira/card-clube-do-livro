@@ -5,6 +5,8 @@ import {
   BookOpen,
   Camera,
   Check,
+  IdCard,
+  Library,
   MapPin,
   RotateCcw,
   Sparkles,
@@ -14,6 +16,7 @@ import {
   ZoomIn,
 } from 'lucide-react';
 import {
+  CardModelType,
   CardThemeAccent,
   MemberCard,
   PhotoAlignment,
@@ -24,6 +27,7 @@ export interface CardEditorFormProps {
   readonly alignedPhotoDataUrl: string | null;
   readonly fileInputRef: React.RefObject<HTMLInputElement | null>;
   readonly isUploadingAvatar: boolean;
+  readonly onUpdateModel: (value: CardModelType) => void;
   readonly onUpdateFullName: (value: string) => void;
   readonly onUpdateCity: (value: string) => void;
   readonly onUpdateState: (value: string) => void;
@@ -89,6 +93,7 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
   alignedPhotoDataUrl,
   fileInputRef,
   isUploadingAvatar,
+  onUpdateModel,
   onUpdateFullName,
   onUpdateCity,
   onUpdateState,
@@ -121,15 +126,64 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
         <span className="step-kicker">PERSONALIZAÇÃO AO VIVO</span>
         <h2 className="section-heading">Preencha seus dados de Membro</h2>
         <p className="section-subtitle">
-          Sua credencial é atualizada em tempo real enquanto você preenche.
+          Escolha o modelo, selecione o livro e veja sua credencial pronta para o WhatsApp.
         </p>
       </div>
 
-      {/* 1. Seletor de Tema do Crachá por Livro do Clube (Acima da Foto do Perfil) */}
+      {/* 0. Seletor de Modelo: Crachá Credencial vs Cartão de Biblioteca */}
+      <div className="form-field-group">
+        <span className="form-label">
+          <IdCard size={15} />
+          <span>Escolha o Modelo da sua Credencial</span>
+        </span>
+        <div className="model-selector-grid" role="radiogroup" aria-label="Modelo da credencial">
+          <button
+            type="button"
+            className={`model-option-btn ${card.model === 'badge' ? 'active' : ''}`}
+            onClick={() => onUpdateModel('badge')}
+            aria-pressed={card.model === 'badge'}
+          >
+            <span className="model-option-icon">
+              <IdCard size={17} />
+            </span>
+            <span className="model-option-texts">
+              <strong className="model-option-title">Crachá Credencial</strong>
+              <span className="model-option-desc">Com fita e foto central</span>
+            </span>
+            {card.model === 'badge' && (
+              <Check size={14} strokeWidth={3} className="model-active-check" />
+            )}
+          </button>
+
+          <button
+            type="button"
+            className={`model-option-btn ${card.model === 'library-card' ? 'active' : ''}`}
+            onClick={() => onUpdateModel('library-card')}
+            aria-pressed={card.model === 'library-card'}
+          >
+            <span className="model-option-icon">
+              <Library size={17} />
+            </span>
+            <span className="model-option-texts">
+              <strong className="model-option-title">Cartão de Biblioteca</strong>
+              <span className="model-option-desc">Ficha catalográfica literária</span>
+            </span>
+            {card.model === 'library-card' && (
+              <Check size={14} strokeWidth={3} className="model-active-check" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* 1. Seletor de Tema por Livro do Clube (Acima da Foto do Perfil) */}
       <div className="form-field-group">
         <span className="form-label">
           <BookOpen size={15} />
-          <span>Tema do Crachá (Livro do Clube)</span>
+          <span>
+            {card.model === 'library-card'
+              ? 'Tema do Cartão de Biblioteca (Livro do Clube)'
+              : 'Tema do Crachá (Livro do Clube)'}
+          </span>
         </span>
         <div className="theme-selector-grid">
           {THEME_OPTIONS.map((theme) => {
@@ -234,7 +288,7 @@ export const CardEditorForm: React.FC<CardEditorFormProps> = ({
             <div className="photo-alignment-panel">
               <div className="alignment-panel-header">
                 <span className="alignment-title">
-                  Ajustar enquadramento (ou arraste a foto no crachá)
+                  Ajustar enquadramento (ou arraste a foto na prévia)
                 </span>
                 <button
                   type="button"

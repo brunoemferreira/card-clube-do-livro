@@ -1,4 +1,8 @@
-import { CardThemeAccent, MemberCard } from '@domain/entities/MemberCard';
+import {
+  CardModelType,
+  CardThemeAccent,
+  MemberCard,
+} from '@domain/entities/MemberCard';
 import { CardUrlStatePort } from '@domain/ports/CardUrlStatePort';
 
 const VALID_THEMES: readonly CardThemeAccent[] = [
@@ -8,11 +12,16 @@ const VALID_THEMES: readonly CardThemeAccent[] = [
   'habitos-atomicos',
 ];
 
+const VALID_MODELS: readonly CardModelType[] = ['badge', 'library-card'];
+
 export class BrowserUrlCardStateAdapter implements CardUrlStatePort {
   public encodeCardToUrl(card: MemberCard): string {
     const baseUrl = `${window.location.origin}${window.location.pathname}`;
     const searchParams = new URLSearchParams();
 
+    if (card.model !== 'badge') {
+      searchParams.set('modelo', card.model);
+    }
     if (card.fullName.trim()) {
       searchParams.set('nome', card.fullName.trim());
     }
@@ -38,6 +47,7 @@ export class BrowserUrlCardStateAdapter implements CardUrlStatePort {
 
   public decodeCardFromCurrentUrl(): MemberCard | null {
     const searchParams = new URLSearchParams(window.location.search);
+    const rawModel = searchParams.get('modelo');
     const fullName = searchParams.get('nome');
     const city = searchParams.get('cidade');
     const state = searchParams.get('estado');
@@ -45,10 +55,17 @@ export class BrowserUrlCardStateAdapter implements CardUrlStatePort {
     const memberSince = searchParams.get('desde');
     const rawTheme = searchParams.get('tema');
 
-    const hasAnyParam = Boolean(fullName || city || state || readingTransformationGoal);
+    const hasAnyParam = Boolean(
+      rawModel || fullName || city || state || readingTransformationGoal || rawTheme,
+    );
     if (!hasAnyParam) {
       return null;
     }
+
+    const model: CardModelType =
+      rawModel && VALID_MODELS.includes(rawModel as CardModelType)
+        ? (rawModel as CardModelType)
+        : 'badge';
 
     const themeAccent: CardThemeAccent =
       rawTheme && VALID_THEMES.includes(rawTheme as CardThemeAccent)
@@ -56,6 +73,7 @@ export class BrowserUrlCardStateAdapter implements CardUrlStatePort {
         : 'habitos-atomicos';
 
     return MemberCard.create({
+      model,
       fullName: fullName ?? '',
       city: city ?? '',
       state: state ?? '',

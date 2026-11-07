@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  CardModelType,
   CardThemeAccent,
   DEFAULT_PHOTO_ALIGNMENT,
   MemberCard,
@@ -90,6 +91,10 @@ export function useMemberCardController() {
       cancelled = true;
     };
   }, [card.photoDataUrl, card.photoAlignment]);
+
+  const updateModel = useCallback((value: CardModelType) => {
+    setCard((prev) => prev.withModel(value));
+  }, []);
 
   const updateFullName = useCallback((value: string) => {
     setCard((prev) => prev.withUpdatedField('fullName', value));
@@ -233,6 +238,7 @@ export function useMemberCardController() {
     isGeneratingImage,
     isUploadingAvatar,
     feedback,
+    updateModel,
     updateFullName,
     updateCity,
     updateState,

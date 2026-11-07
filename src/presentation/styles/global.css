@@ -790,6 +790,503 @@ textarea {
 }
 
 /* =========================================================
+   MODELO 2: CARTÃO DE BIBLIOTECA DO CLUBE DO LIVRO (PROPORÇÃO 4:5)
+   ========================================================= */
+.library-export-canvas {
+  position: relative;
+  width: 100%;
+  max-width: 376px;
+  padding: 14px;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(153, 0, 0, 0.3) 0%, transparent 65%),
+    #0a0506;
+  border-radius: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.member-library-card {
+  position: relative;
+  width: 100%;
+  background: linear-gradient(180deg, #1b1214 0%, #120b0d 100%);
+  border: 1.5px solid rgba(212, 175, 55, 0.38);
+  border-radius: 16px;
+  box-shadow:
+    0 20px 44px rgba(0, 0, 0, 0.78),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  z-index: 2;
+}
+
+.library-inner-frame {
+  position: absolute;
+  inset: 6px;
+  border: 1px dashed rgba(212, 175, 55, 0.22);
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Cabeçalho Timbrado da Ficha de Biblioteca */
+.library-card-header {
+  position: relative;
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  background:
+    radial-gradient(circle at 80% 30%, rgba(220, 38, 38, 0.78) 0%, transparent 58%),
+    linear-gradient(135deg, #09090b 0%, #991b1b 52%, #180406 100%);
+  border-bottom: 1.5px solid rgba(212, 175, 55, 0.35);
+}
+
+.library-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  z-index: 2;
+}
+
+.library-logo-seal {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(16, 6, 8, 0.85);
+  border: 1.5px solid rgba(246, 226, 156, 0.68);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.65);
+}
+
+.library-header-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.library-header-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.library-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--clube-gold-light);
+}
+
+.library-club-title {
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--clube-gold-light);
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+.library-club-subtitle {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #f3f0ec;
+  margin-top: 1px;
+}
+
+.library-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+  z-index: 2;
+}
+
+.library-catalog-stamp {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 0.18rem 0.45rem;
+  border-radius: 5px;
+  background: rgba(220, 38, 38, 0.24);
+  border: 1px solid rgba(250, 204, 21, 0.55);
+  color: #fef08a;
+  white-space: nowrap;
+}
+
+.library-edit-photo-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #b88924 0%, #d4af37 100%);
+  color: #16090b;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+}
+
+/* Grade de Identificação do Leitor (Foto 3x4 + Campos) */
+.library-reader-grid {
+  display: grid;
+  grid-template-columns: 86px 1fr;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem 0.65rem;
+  align-items: stretch;
+}
+
+.library-photo-frame {
+  position: relative;
+  width: 86px;
+  height: 104px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f6e29c 0%, #990000 50%, #d4af37 100%);
+  padding: 2.5px;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+  user-select: none;
+  touch-action: none;
+}
+
+.library-photo-frame.has-photo {
+  cursor: grab;
+}
+
+.library-photo-frame.has-photo.is-dragging {
+  cursor: grabbing;
+}
+
+.library-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+  background: #140b0d;
+  pointer-events: none;
+}
+
+.library-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background: radial-gradient(circle at 30% 25%, #3d1218 0%, #15080a 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--clube-gold-light);
+}
+
+.library-reader-fields {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.42rem;
+  min-width: 0;
+}
+
+.library-field-box {
+  padding: 0.38rem 0.6rem;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(212, 175, 55, 0.24);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.library-field-label {
+  font-family: var(--font-mono);
+  font-size: 0.48rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #a8998c;
+  margin-bottom: 2px;
+}
+
+.library-reader-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+}
+
+.library-reader-name {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.library-reader-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--clube-cream);
+}
+
+/* Tabela Catalográfica (Obra em Leitura | Registro) */
+.library-catalog-table {
+  margin: 0 1rem;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  overflow: hidden;
+}
+
+.library-catalog-cell {
+  padding: 0.42rem 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.library-catalog-cell.cell-book {
+  border-right: 1px solid rgba(212, 175, 55, 0.24);
+}
+
+.library-cell-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.48rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: #a8998c;
+}
+
+.library-cell-label svg {
+  color: var(--clube-gold-primary);
+}
+
+.library-book-title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--clube-gold-light);
+  line-height: 1.15;
+}
+
+.library-register-date {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--clube-cream);
+}
+
+/* Ficha Pautada Literária (Pergunta Dinâmica do Livro + Citação) */
+.library-ruled-notes-box {
+  margin: 0.65rem 1rem 0;
+  padding: 0.6rem 0.78rem 0.7rem;
+  border-radius: 12px;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 21px,
+      rgba(212, 175, 55, 0.12) 22px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(91, 0, 0, 0.24) 0%,
+      rgba(20, 10, 12, 0.85) 100%
+    );
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  text-align: left;
+}
+
+.library-notes-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--clube-gold-light);
+  margin-bottom: 0.38rem;
+}
+
+.library-notes-quote {
+  font-family: var(--font-serif);
+  font-size: 0.92rem;
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.38;
+  color: var(--clube-cream);
+  word-break: break-word;
+}
+
+.library-pillars-row {
+  padding: 0 1rem;
+  margin-top: 0.6rem;
+  margin-bottom: 0.65rem;
+}
+
+.library-card-footer {
+  padding: 0.55rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(8, 3, 4, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.library-footer-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #a8998c;
+}
+
+.library-official-stamp {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 0.16rem 0.42rem;
+  border-radius: 4px;
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  color: var(--clube-gold-light);
+}
+
+/* Variações dos 4 Temas de Livros no Cartão de Biblioteca */
+.library-export-canvas.theme-habitos-atomicos .member-library-card {
+  background: linear-gradient(180deg, #261c14 0%, #17110b 100%);
+  border-color: rgba(194, 132, 47, 0.55);
+}
+
+.library-export-canvas.theme-habitos-atomicos .library-card-header {
+  background:
+    radial-gradient(circle at 80% 25%, rgba(166, 110, 36, 0.42) 0%, transparent 52%),
+    linear-gradient(135deg, #e7dfd3 0%, #f5efe6 52%, #d6c7b2 100%);
+}
+
+.library-export-canvas.theme-habitos-atomicos .library-kicker,
+.library-export-canvas.theme-habitos-atomicos .library-club-title {
+  color: #784712;
+}
+
+.library-export-canvas.theme-habitos-atomicos .library-club-subtitle {
+  color: #292524;
+}
+
+.library-export-canvas.theme-habitos-atomicos .library-catalog-stamp {
+  background: rgba(166, 110, 36, 0.25);
+  border-color: rgba(166, 110, 36, 0.65);
+  color: #784712;
+}
+
+.library-export-canvas.theme-habitos-atomicos .library-photo-frame {
+  background: linear-gradient(135deg, #f5efe6 0%, #a66e24 50%, #d4af37 100%);
+}
+
+.library-export-canvas.theme-habitos-atomicos .library-ruled-notes-box {
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 21px,
+      rgba(212, 175, 55, 0.13) 22px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(245, 239, 230, 0.12) 0%,
+      rgba(30, 20, 12, 0.88) 100%
+    );
+  border-color: rgba(194, 132, 47, 0.48);
+}
+
+.library-export-canvas.theme-triade-do-tempo .member-library-card {
+  background: linear-gradient(180deg, #271107 0%, #160904 100%);
+  border-color: rgba(249, 115, 22, 0.5);
+}
+
+.library-export-canvas.theme-triade-do-tempo .library-card-header {
+  background:
+    radial-gradient(circle at 82% 22%, rgba(255, 255, 255, 0.42) 0%, transparent 48%),
+    linear-gradient(135deg, #c2410c 0%, #f97316 52%, #7c2d12 100%);
+}
+
+.library-export-canvas.theme-triade-do-tempo .library-catalog-stamp {
+  background: rgba(249, 115, 22, 0.28);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #ffedd5;
+}
+
+.library-export-canvas.theme-triade-do-tempo .library-photo-frame {
+  background: linear-gradient(135deg, #ffffff 0%, #f97316 50%, #fbbf24 100%);
+}
+
+.library-export-canvas.theme-triade-do-tempo .library-book-title {
+  color: #fb923c;
+}
+
+.library-export-canvas.theme-triade-do-tempo .library-ruled-notes-box {
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 21px,
+      rgba(251, 146, 60, 0.14) 22px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(249, 115, 22, 0.25) 0%,
+      rgba(28, 12, 5, 0.88) 100%
+    );
+  border-color: rgba(251, 146, 60, 0.48);
+}
+
+.library-export-canvas.theme-a-montanha .member-library-card {
+  background: linear-gradient(180deg, #141417 0%, #09090b 100%);
+  border-color: rgba(234, 179, 8, 0.48);
+}
+
+.library-export-canvas.theme-a-montanha .library-card-header {
+  background:
+    radial-gradient(circle at 50% 85%, rgba(234, 179, 8, 0.45) 0%, transparent 52%),
+    linear-gradient(135deg, #09090b 0%, #18181b 55%, #09090b 100%);
+}
+
+.library-export-canvas.theme-a-montanha .library-photo-frame {
+  background: linear-gradient(135deg, #fef08a 0%, #ca8a04 50%, #18181b 100%);
+}
+
+.library-export-canvas.theme-a-montanha .library-ruled-notes-box {
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 21px,
+      rgba(234, 179, 8, 0.13) 22px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(234, 179, 8, 0.16) 0%,
+      rgba(12, 12, 14, 0.92) 100%
+    );
+  border-color: rgba(234, 179, 8, 0.42);
+}
+
+/* =========================================================
    SEÇÃO DO FORMULÁRIO E COMPARTILHAMENTO (MOBILE-FIRST)
    ========================================================= */
 .right-control-column {
@@ -952,6 +1449,85 @@ textarea {
   resize: none;
   min-height: 52px;
   line-height: 1.35;
+}
+
+/* Seletor de Modelo (Crachá Credencial vs Cartão de Biblioteca) */
+.model-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.45rem;
+}
+
+.model-option-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.44rem 0.65rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  text-align: left;
+}
+
+.model-option-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.model-option-btn.active {
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.22) 0%,
+    rgba(153, 0, 0, 0.25) 100%
+  );
+  border-color: var(--clube-gold-primary);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+.model-option-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(212, 175, 55, 0.14);
+  border: 1px solid rgba(212, 175, 55, 0.34);
+  color: var(--clube-gold-light);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.model-option-texts {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.model-option-title {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+}
+
+.model-option-desc {
+  font-size: 0.62rem;
+  color: var(--clube-sand);
+  opacity: 0.85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.model-active-check {
+  color: var(--clube-gold-light);
+  flex-shrink: 0;
 }
 
 /* Seletor de Tema do Crachá por Livro (4 livros bem definidos) */
@@ -1343,6 +1919,11 @@ textarea {
     padding: 0 18px 18px;
   }
 
+  .library-export-canvas {
+    width: 382px;
+    padding: 16px 18px;
+  }
+
   .right-control-column {
     padding: 1.5rem 2rem 2.25rem;
   }
@@ -1401,7 +1982,15 @@ textarea {
 
   .right-control-column {
     height: 100vh;
-    padding: 1rem 2rem;
+    padding: 0.75rem 2rem;
     overflow: hidden;
+  }
+
+  .control-column-inner {
+    gap: 0.52rem;
+  }
+
+  .editor-form-section {
+    gap: 0.48rem;
   }
 }

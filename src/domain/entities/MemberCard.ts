@@ -4,6 +4,8 @@ export type CardThemeAccent =
   | 'a-montanha'
   | 'habitos-atomicos';
 
+export type CardModelType = 'badge' | 'library-card';
+
 export interface PhotoAlignment {
   readonly zoom: number;
   readonly offsetX: number;
@@ -11,6 +13,7 @@ export interface PhotoAlignment {
 }
 
 export interface MemberCardProps {
+  readonly model: CardModelType;
   readonly fullName: string;
   readonly city: string;
   readonly state: string;
@@ -39,7 +42,15 @@ const BOOK_THEME_TITLES: Record<CardThemeAccent, string> = {
   'habitos-atomicos': 'Hábitos Atômicos',
 };
 
+const BOOK_CATALOG_CODES: Record<CardThemeAccent, string> = {
+  'triade-do-tempo': '#TT-2026',
+  'mais-esperto-que-o-diabo': '#MD-2026',
+  'a-montanha': '#AM-2026',
+  'habitos-atomicos': '#HA-2026',
+};
+
 export class MemberCard {
+  public readonly model: CardModelType;
   public readonly fullName: string;
   public readonly city: string;
   public readonly state: string;
@@ -50,6 +61,7 @@ export class MemberCard {
   public readonly themeAccent: CardThemeAccent;
 
   private constructor(props: MemberCardProps) {
+    this.model = props.model;
     this.fullName = props.fullName;
     this.city = props.city;
     this.state = props.state;
@@ -68,6 +80,7 @@ export class MemberCard {
     }).format(new Date());
 
     return new MemberCard({
+      model: props.model ?? 'badge',
       fullName: props.fullName ?? '',
       city: props.city ?? '',
       state: props.state ?? '',
@@ -84,6 +97,7 @@ export class MemberCard {
     value: MemberCardProps[K],
   ): MemberCard {
     return new MemberCard({
+      model: this.model,
       fullName: this.fullName,
       city: this.city,
       state: this.state,
@@ -96,6 +110,10 @@ export class MemberCard {
     });
   }
 
+  public withModel(model: CardModelType): MemberCard {
+    return this.withUpdatedField('model', model);
+  }
+
   public withUpdatedPhotoAlignment(partialAlignment: Partial<PhotoAlignment>): MemberCard {
     return this.withUpdatedField('photoAlignment', {
       ...this.photoAlignment,
@@ -105,6 +123,10 @@ export class MemberCard {
 
   public getBookTitle(): string {
     return BOOK_THEME_TITLES[this.themeAccent];
+  }
+
+  public getLibraryCatalogCode(): string {
+    return BOOK_CATALOG_CODES[this.themeAccent];
   }
 
   public getTransformationPromptQuestion(): string {
@@ -152,9 +174,11 @@ export class MemberCard {
   }
 
   public getFileSlug(): string {
+    const prefix =
+      this.model === 'library-card' ? 'cartao-biblioteca-clube' : 'cracha-clube-do-livro';
     const trimmed = this.fullName.trim();
     if (!trimmed) {
-      return 'card-clube-do-livro';
+      return prefix;
     }
     const slug = trimmed
       .normalize('NFD')
@@ -162,7 +186,7 @@ export class MemberCard {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
-    return `clube-do-livro-${slug || 'membro'}`;
+    return `${prefix}-${slug || 'membro'}`;
   }
 
   public validateForExport(): MemberCardValidationResult {
@@ -192,11 +216,13 @@ export class MemberCard {
     const location = this.getDisplayCityState();
     const question = this.getTransformationPromptQuestion();
     const goal = this.getDisplayTransformationGoal();
+    const book = this.getBookTitle();
 
     return [
       `📚✨ *Embarquei no Clube do Livro | Livros & Negócios!*`,
       ``,
       `👤 *Membro:* ${name} (${location})`,
+      `📖 *Leitura:* ${book}`,
       `🎯 *${question}*`,
       `"${goal}"`,
     ].join('\n');
@@ -204,6 +230,7 @@ export class MemberCard {
 
   public toPrimitives(): MemberCardProps {
     return {
+      model: this.model,
       fullName: this.fullName,
       city: this.city,
       state: this.state,

@@ -17,6 +17,10 @@ interface ThemeVisualPalette {
   readonly avatarBorderStops: readonly [string, string, string];
   readonly quoteBoxBgStops: readonly [string, string];
   readonly quoteBoxBorder: string;
+  readonly libraryAccentColor: string;
+  readonly libraryStampBg: string;
+  readonly libraryStampBorder: string;
+  readonly libraryStampText: string;
 }
 
 const THEME_PALETTES: Record<string, ThemeVisualPalette> = {
@@ -34,6 +38,10 @@ const THEME_PALETTES: Record<string, ThemeVisualPalette> = {
     avatarBorderStops: ['#ffffff', '#f97316', '#fbbf24'],
     quoteBoxBgStops: ['rgba(249, 115, 22, 0.25)', 'rgba(28, 12, 5, 0.88)'],
     quoteBoxBorder: 'rgba(251, 146, 60, 0.48)',
+    libraryAccentColor: '#fb923c',
+    libraryStampBg: 'rgba(249, 115, 22, 0.22)',
+    libraryStampBorder: 'rgba(251, 146, 60, 0.65)',
+    libraryStampText: '#ffedd5',
   },
   'mais-esperto-que-o-diabo': {
     bannerStops: ['#09090b', '#991b1b', '#180406'],
@@ -49,6 +57,10 @@ const THEME_PALETTES: Record<string, ThemeVisualPalette> = {
     avatarBorderStops: ['#f6e29c', '#990000', '#d4af37'],
     quoteBoxBgStops: ['rgba(91, 0, 0, 0.28)', 'rgba(20, 10, 12, 0.82)'],
     quoteBoxBorder: 'rgba(212, 175, 55, 0.28)',
+    libraryAccentColor: '#facc15',
+    libraryStampBg: 'rgba(220, 38, 38, 0.24)',
+    libraryStampBorder: 'rgba(250, 204, 21, 0.55)',
+    libraryStampText: '#fef08a',
   },
   'a-montanha': {
     bannerStops: ['#09090b', '#18181b', '#09090b'],
@@ -64,6 +76,10 @@ const THEME_PALETTES: Record<string, ThemeVisualPalette> = {
     avatarBorderStops: ['#fef08a', '#ca8a04', '#18181b'],
     quoteBoxBgStops: ['rgba(234, 179, 8, 0.16)', 'rgba(12, 12, 14, 0.92)'],
     quoteBoxBorder: 'rgba(234, 179, 8, 0.42)',
+    libraryAccentColor: '#eab308',
+    libraryStampBg: 'rgba(234, 179, 8, 0.16)',
+    libraryStampBorder: 'rgba(234, 179, 8, 0.6)',
+    libraryStampText: '#fef08a',
   },
   'habitos-atomicos': {
     bannerStops: ['#e7dfd3', '#f5efe6', '#d6c7b2'],
@@ -79,6 +95,10 @@ const THEME_PALETTES: Record<string, ThemeVisualPalette> = {
     avatarBorderStops: ['#f5efe6', '#a66e24', '#d4af37'],
     quoteBoxBgStops: ['rgba(245, 239, 230, 0.12)', 'rgba(30, 20, 12, 0.88)'],
     quoteBoxBorder: 'rgba(194, 132, 47, 0.48)',
+    libraryAccentColor: '#f6e29c',
+    libraryStampBg: 'rgba(166, 110, 36, 0.28)',
+    libraryStampBorder: 'rgba(212, 175, 55, 0.65)',
+    libraryStampText: '#784712',
   },
 };
 
@@ -91,6 +111,21 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
       await document.fonts.ready;
     }
 
+    const isLibraryCard =
+      element.getAttribute('data-card-model') === 'library-card' ||
+      element.classList.contains('library-export-canvas');
+
+    if (isLibraryCard) {
+      return this.generateLibraryCardPng(element, fileNameWithoutExtension);
+    }
+
+    return this.generateBadgeCardPng(element, fileNameWithoutExtension);
+  }
+
+  private async generateBadgeCardPng(
+    element: HTMLElement,
+    fileNameWithoutExtension: string,
+  ): Promise<GeneratedCardImage> {
     const themeKey = this.extractThemeFromElement(element);
     const palette =
       THEME_PALETTES[themeKey] ?? THEME_PALETTES['habitos-atomicos'];
@@ -129,7 +164,6 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     const cardTopY = 52;
     const bannerHeight = 128;
 
-    // Pre-calcula linhas de texto para determinar a altura exata do card sem qualquer sobreposição
     const measureCanvas = document.createElement('canvas');
     const measureCtx = measureCanvas.getContext('2d')!;
 
@@ -151,7 +185,7 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     const quoteBlockHeight = quoteLines.length * 20;
     const quoteBoxHeight = 24 + questionBlockHeight + 8 + quoteBlockHeight;
 
-    const bodyStartY = cardTopY + bannerHeight + 70 + 14; // Abaixo do avatar
+    const bodyStartY = cardTopY + bannerHeight + 70 + 14;
     const roleY = bodyStartY + nameBlockHeight + 8;
     const locationY = roleY + 38;
     const quoteBoxY = locationY + 24;
@@ -205,7 +239,6 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     ctx.lineTo(strapX + strapWidth, strapHeight);
     ctx.stroke();
 
-    // Texto Vertical na Fita
     ctx.save();
     ctx.translate(baseWidth / 2 + 3, strapHeight / 2);
     ctx.rotate(-Math.PI / 2);
@@ -215,7 +248,6 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     ctx.fillText('CLUBE DO LIVRO', 0, 0);
     ctx.restore();
 
-    // Presilha Metálica Dourada
     const claspWidth = 50;
     const claspHeight = 9;
     const claspX = (baseWidth - claspWidth) / 2;
@@ -227,7 +259,7 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     ctx.fillStyle = claspGrad;
     this.fillRoundedRect(ctx, claspX, claspY, claspWidth, claspHeight, 4);
 
-    // 3. Corpo Principal do Crachá (com clip arredondado)
+    // 3. Corpo Principal do Crachá
     const cardHeight = cardBottomY - cardTopY;
     ctx.save();
     ctx.shadowColor = 'rgba(0, 0, 0, 0.75)';
@@ -240,7 +272,6 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     this.fillRoundedRect(ctx, cardX, cardTopY, cardWidth, cardHeight, 20);
     ctx.restore();
 
-    // Clip do interior do crachá
     ctx.save();
     this.roundedRectPath(ctx, cardX, cardTopY, cardWidth, cardHeight, 20);
     ctx.clip();
@@ -284,7 +315,6 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     ctx.fillStyle = bannerGlow2;
     ctx.fillRect(cardX, cardTopY, cardWidth, bannerHeight);
 
-    // Linha divisória inferior do banner
     ctx.strokeStyle = 'rgba(212, 175, 55, 0.34)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
@@ -292,7 +322,6 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     ctx.lineTo(cardX + cardWidth, cardTopY + bannerHeight);
     ctx.stroke();
 
-    // Furo superior do crachá
     const slotW = 50;
     const slotH = 6;
     const slotX = (baseWidth - slotW) / 2;
@@ -303,7 +332,6 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     ctx.lineWidth = 1;
     this.strokeRoundedRect(ctx, slotX, slotY, slotW, slotH, 99);
 
-    // Medalhão e Logo Oficial Clube do Livro no Banner
     const medX = cardX + 14;
     const medY = cardTopY + 16;
     const medSize = 58;
@@ -341,7 +369,6 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
       );
     }
 
-    // Título "CLUBE DO LIVRO" e Subtítulo "Livros & Negócios" ao lado do medalhão (sem quebrar linha!)
     const brandTextX = medX + medSize + 10;
     ctx.save();
     ctx.textAlign = 'left';
@@ -407,7 +434,7 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     }
     ctx.restore();
 
-    // 6. Nome do Membro + Ícone Verificado ao lado da primeira linha
+    // 6. Nome do Membro + Ícone Verificado
     ctx.font = '800 19px "Plus Jakarta Sans", sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
@@ -424,7 +451,6 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
         ctx.textAlign = 'left';
         ctx.fillText(line, startX, lineY);
 
-        // Ícone Verificado ao lado do nome
         const pillX = startX + lineWidth + gap;
         const pillY = lineY - 15;
         const pillGrad = ctx.createLinearGradient(
@@ -449,7 +475,7 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
       }
     });
 
-    // 7. Cargo / Comunidade em 2 linhas
+    // 7. Cargo / Comunidade
     ctx.textAlign = 'center';
     ctx.font = '700 11.5px "Plus Jakarta Sans", sans-serif';
     ctx.fillStyle = '#f6e29c';
@@ -463,7 +489,7 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
       roleY + 26,
     );
 
-    // 8. Localização (Cidade / Estado) com Pin
+    // 8. Localização
     ctx.font = '500 12px "Plus Jakarta Sans", sans-serif';
     const locWidth = ctx.measureText(locationText).width;
     const locTotalW = 14 + 5 + locWidth;
@@ -473,7 +499,7 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     ctx.textAlign = 'left';
     ctx.fillText(locationText, locStartX + 19, locationY + 12);
 
-    // 9. Caixa da Pergunta de Transformação (Altura Dinâmica — Nunca corta!)
+    // 9. Caixa da Pergunta de Transformação
     const boxMarginX = 18;
     const boxX = cardX + boxMarginX;
     const boxW = cardWidth - boxMarginX * 2;
@@ -487,7 +513,6 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     ctx.lineWidth = 1;
     this.strokeRoundedRect(ctx, boxX, quoteBoxY, boxW, quoteBoxHeight, 12);
 
-    // Ícone Sparkle + Pergunta com o nome do livro
     this.drawLucideSparklesIcon(ctx, boxX + 10, quoteBoxY + 9, 13, '#d4af37');
     ctx.font = '700 11px "Plus Jakarta Sans", sans-serif';
     ctx.fillStyle = '#f6e29c';
@@ -496,7 +521,6 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
       ctx.fillText(line, boxX + 27, quoteBoxY + 19 + idx * 15);
     });
 
-    // Citação / Resposta do Membro
     const quoteStartY = quoteBoxY + 19 + questionBlockHeight + 6;
     ctx.font = 'italic 600 15px "Cormorant Garamond", Georgia, serif';
     ctx.fillStyle = '#f3f0ec';
@@ -504,7 +528,555 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
       ctx.fillText(line, boxX + 14, quoteStartY + idx * 20);
     });
 
-    // 10. Tags de Pilares com seus respectivos ícones (LEITURA | ESTRATÉGIA | MENTALIDADE)
+    // 10. Tags de Pilares (LEITURA | ESTRATÉGIA | MENTALIDADE)
+    this.drawPillarTagsRow(ctx, baseWidth, pillarsY);
+
+    // 11. Rodapé do Crachá
+    ctx.fillStyle = 'rgba(8, 3, 4, 0.5)';
+    ctx.fillRect(cardX, footerY, cardWidth, footerHeight);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cardX, footerY);
+    ctx.lineTo(cardX + cardWidth, footerY);
+    ctx.stroke();
+
+    ctx.font = '500 10.5px "Plus Jakarta Sans", sans-serif';
+    const footerTextW = ctx.measureText(footerText).width;
+    const footerTotalW = 15 + 6 + footerTextW;
+    const footerStartX = (baseWidth - footerTotalW) / 2;
+
+    if (logoImage) {
+      ctx.drawImage(logoImage, footerStartX, footerY + 10.5, 15, 15);
+    }
+    ctx.fillStyle = '#8c7b72';
+    ctx.textAlign = 'left';
+    ctx.fillText(footerText, footerStartX + 21, footerY + 21.5);
+
+    ctx.restore();
+
+    ctx.strokeStyle = palette.cardBorder;
+    ctx.lineWidth = 1.5;
+    this.strokeRoundedRect(ctx, cardX, cardTopY, cardWidth, cardHeight, 20);
+
+    const dataUrl = canvas.toDataURL('image/png', 1.0);
+    const blob = await this.convertDataUrlToBlob(dataUrl);
+    const fileName = `${fileNameWithoutExtension}.png`;
+
+    return {
+      dataUrl,
+      blob,
+      fileName,
+    };
+  }
+
+  /**
+   * Renderiza o Modelo 2: Cartão de Biblioteca do Clube do Livro em 3x Retina (Proporção 4:5 ideal para WhatsApp)
+   */
+  private async generateLibraryCardPng(
+    element: HTMLElement,
+    fileNameWithoutExtension: string,
+  ): Promise<GeneratedCardImage> {
+    const themeKey = this.extractThemeFromElement(element);
+    const palette =
+      THEME_PALETTES[themeKey] ?? THEME_PALETTES['habitos-atomicos'];
+
+    const memberName =
+      element.querySelector('.library-reader-name')?.textContent?.trim() ||
+      'Seu Nome Completo';
+    const locationText =
+      element.querySelector('.library-reader-location span')?.textContent?.trim() ||
+      'Sua Cidade / UF';
+    const catalogCode =
+      element.querySelector('.library-catalog-stamp')?.textContent?.trim() ||
+      '#HA-2026';
+    const bookTitle =
+      element.querySelector('.library-book-title')?.textContent?.trim() ||
+      'Hábitos Atômicos';
+    const registerDate =
+      element.querySelector('.library-register-date')?.textContent?.trim() ||
+      '07/11/2026';
+    const transformationQuestion =
+      element.querySelector('.library-notes-question')?.textContent?.trim() ||
+      'O que você busca transformar na sua vida através da leitura?';
+    const transformationQuote =
+      element.querySelector('.library-notes-quote')?.textContent?.trim() ||
+      '“Expandir minha mentalidade, desenvolver liderança e transformar conhecimento em resultados reais através da leitura.”';
+    const initialsText =
+      element.querySelector('.avatar-initials')?.textContent?.trim() || 'CL';
+
+    const avatarImgElement =
+      element.querySelector<HTMLImageElement>('.library-avatar-img');
+    const logoImgElement =
+      element.querySelector<HTMLImageElement>('.library-header-logo');
+
+    const [logoImage, avatarImage] = await Promise.all([
+      this.loadImageSafe(logoImgElement?.src || './logo-clube.png'),
+      avatarImgElement?.src
+        ? this.loadImageSafe(avatarImgElement.src)
+        : Promise.resolve(null),
+    ]);
+
+    const scale = 3;
+    const baseWidth = 382;
+    const cardX = 16;
+    const cardWidth = baseWidth - cardX * 2; // 350px
+    const cardTopY = 18;
+    const headerHeight = 82;
+
+    const measureCanvas = document.createElement('canvas');
+    const measureCtx = measureCanvas.getContext('2d')!;
+
+    // Medir linhas do nome do leitor ao lado da foto 3x4
+    const readerRightColW = cardWidth - 36 - 86 - 12; // ~216px
+    measureCtx.font = '800 15px "Plus Jakarta Sans", sans-serif';
+    const nameLines = this.wrapText(measureCtx, memberName, readerRightColW - 36);
+
+    // Medir pergunta e citação nas linhas pautadas
+    const notesBoxW = cardWidth - 36; // 314px
+    measureCtx.font = '700 11px "Plus Jakarta Sans", sans-serif';
+    const questionLines = this.wrapText(
+      measureCtx,
+      transformationQuestion,
+      notesBoxW - 42,
+    );
+
+    measureCtx.font = 'italic 600 15px "Cormorant Garamond", Georgia, serif';
+    const quoteLines = this.wrapText(
+      measureCtx,
+      transformationQuote,
+      notesBoxW - 28,
+    );
+
+    const questionBlockH = questionLines.length * 15;
+    const quoteBlockH = Math.max(2, quoteLines.length) * 22;
+    const notesBoxHeight = 20 + questionBlockH + 10 + quoteBlockH + 10;
+
+    const readerGridY = cardTopY + headerHeight + 14;
+    const readerGridH = 104;
+    const catalogTableY = readerGridY + readerGridH + 12;
+    const catalogTableH = 48;
+    const notesBoxY = catalogTableY + catalogTableH + 12;
+    const pillarsY = notesBoxY + notesBoxHeight + 14;
+    const footerY = pillarsY + 34;
+    const footerHeight = 40;
+    const cardBottomY = footerY + footerHeight;
+    const baseHeight = cardBottomY + 18;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = baseWidth * scale;
+    canvas.height = baseHeight * scale;
+
+    const ctx = canvas.getContext('2d')!;
+    ctx.scale(scale, scale);
+
+    // 1. Fundo Escuro do Canvas Exportado (#0a0506)
+    ctx.fillStyle = '#0a0506';
+    this.fillRoundedRect(ctx, 0, 0, baseWidth, baseHeight, 22);
+
+    const bgGlow = ctx.createRadialGradient(
+      baseWidth / 2,
+      baseHeight * 0.25,
+      10,
+      baseWidth / 2,
+      baseHeight * 0.25,
+      baseWidth * 0.7,
+    );
+    bgGlow.addColorStop(0, palette.bannerGlowPrimary);
+    bgGlow.addColorStop(1, 'rgba(10, 5, 6, 0)');
+    ctx.fillStyle = bgGlow;
+    ctx.fillRect(0, 0, baseWidth, baseHeight);
+
+    // 2. Corpo Principal da Ficha de Biblioteca
+    const cardHeight = cardBottomY - cardTopY;
+    ctx.save();
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+    ctx.shadowBlur = 30;
+    ctx.shadowOffsetY = 12;
+    const cardBgGrad = ctx.createLinearGradient(0, cardTopY, 0, cardBottomY);
+    cardBgGrad.addColorStop(0, palette.cardBgStops[0]);
+    cardBgGrad.addColorStop(1, palette.cardBgStops[1]);
+    ctx.fillStyle = cardBgGrad;
+    this.fillRoundedRect(ctx, cardX, cardTopY, cardWidth, cardHeight, 16);
+    ctx.restore();
+
+    ctx.save();
+    this.roundedRectPath(ctx, cardX, cardTopY, cardWidth, cardHeight, 16);
+    ctx.clip();
+
+    // 3. Cabeçalho Timbrado da Ficha de Biblioteca (Com cores do Livro)
+    const headerGrad = ctx.createLinearGradient(
+      cardX,
+      cardTopY,
+      cardX + cardWidth,
+      cardTopY + headerHeight,
+    );
+    headerGrad.addColorStop(0, palette.bannerStops[0]);
+    headerGrad.addColorStop(0.55, palette.bannerStops[1]);
+    headerGrad.addColorStop(1, palette.bannerStops[2]);
+    ctx.fillStyle = headerGrad;
+    ctx.fillRect(cardX, cardTopY, cardWidth, headerHeight);
+
+    const headerGlow = ctx.createRadialGradient(
+      cardX + cardWidth * 0.8,
+      cardTopY + headerHeight * 0.3,
+      4,
+      cardX + cardWidth * 0.8,
+      cardTopY + headerHeight * 0.3,
+      cardWidth * 0.55,
+    );
+    headerGlow.addColorStop(0, palette.bannerGlowPrimary);
+    headerGlow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = headerGlow;
+    ctx.fillRect(cardX, cardTopY, cardWidth, headerHeight);
+
+    // Linha dupla de ficha catalográfica abaixo do header
+    ctx.strokeStyle = palette.cardBorder;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cardX, cardTopY + headerHeight);
+    ctx.lineTo(cardX + cardWidth, cardTopY + headerHeight);
+    ctx.stroke();
+
+    // Selo Redondo com Logo Oficial no Header
+    const sealSize = 50;
+    const sealX = cardX + 16;
+    const sealY = cardTopY + (headerHeight - sealSize) / 2;
+    const sealCX = sealX + sealSize / 2;
+    const sealCY = sealY + sealSize / 2;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(sealCX, sealCY, sealSize / 2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(16, 6, 8, 0.82)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(246, 226, 156, 0.7)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.restore();
+
+    if (logoImage) {
+      const logoDraw = 44;
+      ctx.drawImage(
+        logoImage,
+        sealCX - logoDraw / 2,
+        sealCY - logoDraw / 2,
+        logoDraw,
+        logoDraw,
+      );
+    }
+
+    // Textos do Cabeçalho da Ficha de Biblioteca
+    const titleX = sealX + sealSize + 10;
+    ctx.textAlign = 'left';
+    ctx.font = '800 8.5px "JetBrains Mono", monospace';
+    ctx.fillStyle = palette.bannerTitleColor;
+    ctx.fillText('FICHA DE BIBLIOTECA', titleX, cardTopY + 26);
+
+    ctx.font = '700 16.5px "Cormorant Garamond", Georgia, serif';
+    ctx.fillStyle = palette.bannerTitleColor;
+    ctx.fillText('CLUBE DO LIVRO', titleX, cardTopY + 45);
+
+    ctx.font = '600 10px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = palette.bannerSubtitleColor;
+    ctx.fillText('Comunidade Livros & Negócios', titleX, cardTopY + 60);
+
+    // Selo de Código Catalográfico (#HA-2026) no canto direito
+    ctx.font = '700 10px "JetBrains Mono", monospace';
+    const stampW = ctx.measureText(catalogCode).width + 16;
+    const stampH = 22;
+    const stampX = cardX + cardWidth - stampW - 16;
+    const stampY = cardTopY + 16;
+
+    ctx.fillStyle = palette.libraryStampBg;
+    this.fillRoundedRect(ctx, stampX, stampY, stampW, stampH, 6);
+    ctx.strokeStyle = palette.libraryStampBorder;
+    ctx.lineWidth = 1;
+    this.strokeRoundedRect(ctx, stampX, stampY, stampW, stampH, 6);
+    ctx.fillStyle = palette.libraryStampText;
+    ctx.textAlign = 'center';
+    ctx.fillText(catalogCode, stampX + stampW / 2, stampY + 14.5);
+
+    // 4. Grade do Leitor: Foto 3x4 à Esquerda + Campos Catalográficos à Direita
+    const innerMarginX = 18;
+    const photoX = cardX + innerMarginX;
+    const photoY = readerGridY;
+    const photoW = 86;
+    const photoH = readerGridH; // 104px (Proporção 3x4)
+
+    ctx.save();
+    const photoBorderGrad = ctx.createLinearGradient(
+      photoX,
+      photoY,
+      photoX + photoW,
+      photoY + photoH,
+    );
+    photoBorderGrad.addColorStop(0, palette.avatarBorderStops[0]);
+    photoBorderGrad.addColorStop(0.5, palette.avatarBorderStops[1]);
+    photoBorderGrad.addColorStop(1, palette.avatarBorderStops[2]);
+    ctx.fillStyle = photoBorderGrad;
+    this.fillRoundedRect(ctx, photoX, photoY, photoW, photoH, 12);
+    ctx.restore();
+
+    const pPad = 2.5;
+    const pInnerX = photoX + pPad;
+    const pInnerY = photoY + pPad;
+    const pInnerW = photoW - pPad * 2;
+    const pInnerH = photoH - pPad * 2;
+
+    ctx.save();
+    this.roundedRectPath(ctx, pInnerX, pInnerY, pInnerW, pInnerH, 10);
+    ctx.clip();
+    if (avatarImage) {
+      // Desenha mantendo preenchimento centralizado (cover) no quadro 3x4
+      const scaleCover = Math.max(
+        pInnerW / avatarImage.width,
+        pInnerH / avatarImage.height,
+      );
+      const dw = avatarImage.width * scaleCover;
+      const dh = avatarImage.height * scaleCover;
+      const dx = pInnerX + (pInnerW - dw) / 2;
+      const dy = pInnerY + (pInnerH - dh) / 2;
+      ctx.drawImage(avatarImage, dx, dy, dw, dh);
+    } else {
+      ctx.fillStyle = '#190b0e';
+      ctx.fillRect(pInnerX, pInnerY, pInnerW, pInnerH);
+      ctx.font = '700 26px "Cormorant Garamond", Georgia, serif';
+      ctx.fillStyle = '#f6e29c';
+      ctx.textAlign = 'center';
+      ctx.fillText(initialsText, pInnerX + pInnerW / 2, pInnerY + pInnerH / 2 + 8);
+    }
+    ctx.restore();
+
+    // Campos à Direita da Foto 3x4 (Leitor Credenciado + Cidade/UF)
+    const fieldsX = photoX + photoW + 12;
+    const fieldsW = cardWidth - innerMarginX * 2 - photoW - 12;
+
+    // Caixa 1: LEITOR(A) CREDENCIADO(A)
+    const field1Y = readerGridY;
+    const field1H = 54;
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.035)';
+    this.fillRoundedRect(ctx, fieldsX, field1Y, fieldsW, field1H, 9);
+    ctx.strokeStyle = 'rgba(212, 175, 55, 0.24)';
+    ctx.lineWidth = 1;
+    this.strokeRoundedRect(ctx, fieldsX, field1Y, fieldsW, field1H, 9);
+
+    ctx.textAlign = 'left';
+    ctx.font = '700 8px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#a8998c';
+    ctx.fillText('LEITOR(A) CREDENCIADO(A)', fieldsX + 10, field1Y + 14);
+
+    ctx.font = '800 14.5px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#ffffff';
+    const displayFirstLine = nameLines[0] || memberName;
+    ctx.fillText(displayFirstLine, fieldsX + 10, field1Y + 34);
+
+    if (nameLines.length > 1) {
+      ctx.font = '700 11.5px "Plus Jakarta Sans", sans-serif';
+      ctx.fillStyle = '#e5dec9';
+      ctx.fillText(nameLines[1], fieldsX + 10, field1Y + 48);
+    }
+
+    // Ícone Verificado no canto da Caixa 1
+    const vPillSize = 18;
+    const vPillX = fieldsX + fieldsW - vPillSize - 8;
+    const vPillY = field1Y + 18;
+    ctx.fillStyle = '#8b0a1a';
+    this.fillRoundedRect(ctx, vPillX, vPillY, vPillSize, vPillSize, 5);
+    ctx.strokeStyle = 'rgba(246, 226, 156, 0.5)';
+    this.strokeRoundedRect(ctx, vPillX, vPillY, vPillSize, vPillSize, 5);
+    this.drawLucideBookOpenIcon(ctx, vPillX + 3, vPillY + 3, 12, '#f6e29c');
+
+    // Caixa 2: LOCALIZAÇÃO (CIDADE / UF)
+    const field2Y = field1Y + field1H + 6;
+    const field2H = readerGridH - field1H - 6; // 44px
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.035)';
+    this.fillRoundedRect(ctx, fieldsX, field2Y, fieldsW, field2H, 9);
+    ctx.strokeStyle = 'rgba(212, 175, 55, 0.24)';
+    ctx.lineWidth = 1;
+    this.strokeRoundedRect(ctx, fieldsX, field2Y, fieldsW, field2H, 9);
+
+    ctx.font = '700 8px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#a8998c';
+    ctx.fillText('LOCALIZAÇÃO (CIDADE / UF)', fieldsX + 10, field2Y + 13);
+
+    this.drawLucideMapPinIcon(ctx, fieldsX + 10, field2Y + 20, 13, '#d4af37');
+    ctx.font = '600 12px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#f3f0ec';
+    ctx.fillText(locationText, fieldsX + 27, field2Y + 31);
+
+    // 5. Tabela Catalográfica (OBRA EM LEITURA | REGISTRO)
+    const tableX = cardX + innerMarginX;
+    const tableW = cardWidth - innerMarginX * 2;
+    const col1W = Math.round(tableW * 0.64);
+
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+    this.fillRoundedRect(ctx, tableX, catalogTableY, tableW, catalogTableH, 10);
+    ctx.strokeStyle = palette.quoteBoxBorder;
+    ctx.lineWidth = 1;
+    this.strokeRoundedRect(ctx, tableX, catalogTableY, tableW, catalogTableH, 10);
+
+    // Divisória vertical da tabela
+    ctx.beginPath();
+    ctx.moveTo(tableX + col1W, catalogTableY);
+    ctx.lineTo(tableX + col1W, catalogTableY + catalogTableH);
+    ctx.stroke();
+
+    // Coluna 1: Obra em Leitura
+    this.drawLucideBookOpenIcon(
+      ctx,
+      tableX + 10,
+      catalogTableY + 8,
+      11,
+      palette.libraryAccentColor,
+    );
+    ctx.font = '700 8px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#a8998c';
+    ctx.textAlign = 'left';
+    ctx.fillText('OBRA EM LEITURA', tableX + 24, catalogTableY + 17);
+
+    ctx.font = '800 12.5px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = palette.libraryAccentColor;
+    ctx.fillText(bookTitle, tableX + 10, catalogTableY + 36);
+
+    // Coluna 2: Registro (Data)
+    const col2X = tableX + col1W;
+    this.drawLucideCalendarIcon(
+      ctx,
+      col2X + 10,
+      catalogTableY + 8,
+      11,
+      palette.libraryAccentColor,
+    );
+    ctx.font = '700 8px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#a8998c';
+    ctx.fillText('REGISTRO', col2X + 24, catalogTableY + 17);
+
+    ctx.font = '700 12px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#f3f0ec';
+    ctx.fillText(registerDate, col2X + 10, catalogTableY + 36);
+
+    // 6. Bloco Pautado Literário (Pergunta Dinâmica do Livro + Citação)
+    const notesX = cardX + innerMarginX;
+    const notesGrad = ctx.createLinearGradient(
+      0,
+      notesBoxY,
+      0,
+      notesBoxY + notesBoxHeight,
+    );
+    notesGrad.addColorStop(0, palette.quoteBoxBgStops[0]);
+    notesGrad.addColorStop(1, palette.quoteBoxBgStops[1]);
+    ctx.fillStyle = notesGrad;
+    this.fillRoundedRect(ctx, notesX, notesBoxY, notesBoxW, notesBoxHeight, 12);
+    ctx.strokeStyle = palette.quoteBoxBorder;
+    ctx.lineWidth = 1;
+    this.strokeRoundedRect(ctx, notesX, notesBoxY, notesBoxW, notesBoxHeight, 12);
+
+    // Pergunta com Sparkles
+    this.drawLucideSparklesIcon(ctx, notesX + 10, notesBoxY + 9, 13, '#d4af37');
+    ctx.font = '700 11px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#f6e29c';
+    ctx.textAlign = 'left';
+    questionLines.forEach((line, idx) => {
+      ctx.fillText(line, notesX + 27, notesBoxY + 19 + idx * 15);
+    });
+
+    // Linhas pautadas de ficha de biblioteca + Citação
+    const quoteFirstLineY = notesBoxY + 19 + questionBlockH + 22;
+    const totalRuledLines = Math.max(2, quoteLines.length);
+
+    for (let i = 0; i < totalRuledLines; i++) {
+      const lineBaseY = quoteFirstLineY + i * 22;
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.16)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(notesX + 12, lineBaseY + 4);
+      ctx.lineTo(notesX + notesBoxW - 12, lineBaseY + 4);
+      ctx.stroke();
+
+      if (quoteLines[i]) {
+        ctx.font = 'italic 600 15px "Cormorant Garamond", Georgia, serif';
+        ctx.fillStyle = '#f3f0ec';
+        ctx.fillText(quoteLines[i], notesX + 14, lineBaseY);
+      }
+    }
+
+    // 7. Tags de Pilares (LEITURA | ESTRATÉGIA | MENTALIDADE)
+    this.drawPillarTagsRow(ctx, baseWidth, pillarsY);
+
+    // 8. Rodapé com Selo + Carimbo "ACERVO OFICIAL"
+    ctx.fillStyle = 'rgba(8, 3, 4, 0.58)';
+    ctx.fillRect(cardX, footerY, cardWidth, footerHeight);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cardX, footerY);
+    ctx.lineTo(cardX + cardWidth, footerY);
+    ctx.stroke();
+
+    if (logoImage) {
+      ctx.drawImage(logoImage, cardX + 16, footerY + 12.5, 15, 15);
+    }
+    ctx.font = '600 10px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#a8998c';
+    ctx.textAlign = 'left';
+    ctx.fillText('Passaporte Literário • Clube do Livro', cardX + 36, footerY + 23.5);
+
+    // Carimbo "ACERVO OFICIAL"
+    ctx.font = '800 8.5px "JetBrains Mono", monospace';
+    const stampLabel = 'ACERVO OFICIAL';
+    const officialW = ctx.measureText(stampLabel).width + 14;
+    const officialH = 19;
+    const officialX = cardX + cardWidth - officialW - 14;
+    const officialY = footerY + 10.5;
+
+    ctx.fillStyle = 'rgba(212, 175, 55, 0.12)';
+    this.fillRoundedRect(ctx, officialX, officialY, officialW, officialH, 4);
+    ctx.strokeStyle = 'rgba(212, 175, 55, 0.55)';
+    ctx.lineWidth = 1;
+    this.strokeRoundedRect(ctx, officialX, officialY, officialW, officialH, 4);
+    ctx.fillStyle = '#f6e29c';
+    ctx.textAlign = 'center';
+    ctx.fillText(stampLabel, officialX + officialW / 2, officialY + 13);
+
+    // Moldura interna tracejada sutil da ficha de biblioteca
+    ctx.save();
+    ctx.setLineDash([4, 4]);
+    ctx.strokeStyle = 'rgba(212, 175, 55, 0.22)';
+    ctx.lineWidth = 1;
+    this.strokeRoundedRect(
+      ctx,
+      cardX + 6,
+      cardTopY + 6,
+      cardWidth - 12,
+      cardHeight - 12,
+      12,
+    );
+    ctx.restore();
+
+    ctx.restore(); // Fim do clip do card
+
+    // Borda externa do Cartão de Biblioteca
+    ctx.strokeStyle = palette.cardBorder;
+    ctx.lineWidth = 1.5;
+    this.strokeRoundedRect(ctx, cardX, cardTopY, cardWidth, cardHeight, 16);
+
+    const dataUrl = canvas.toDataURL('image/png', 1.0);
+    const blob = await this.convertDataUrlToBlob(dataUrl);
+    const fileName = `${fileNameWithoutExtension}.png`;
+
+    return {
+      dataUrl,
+      blob,
+      fileName,
+    };
+  }
+
+  private drawPillarTagsRow(
+    ctx: CanvasRenderingContext2D,
+    baseWidth: number,
+    pillarsY: number,
+  ): void {
     const tags: ReadonlyArray<{
       readonly label: string;
       readonly icon: 'book' | 'trending' | 'flame';
@@ -576,45 +1148,6 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
       );
       currentTagX += tw + tagGap;
     });
-
-    // 11. Rodapé do Crachá
-    ctx.fillStyle = 'rgba(8, 3, 4, 0.5)';
-    ctx.fillRect(cardX, footerY, cardWidth, footerHeight);
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(cardX, footerY);
-    ctx.lineTo(cardX + cardWidth, footerY);
-    ctx.stroke();
-
-    ctx.font = '500 10.5px "Plus Jakarta Sans", sans-serif';
-    const footerTextW = ctx.measureText(footerText).width;
-    const footerTotalW = 15 + 6 + footerTextW;
-    const footerStartX = (baseWidth - footerTotalW) / 2;
-
-    if (logoImage) {
-      ctx.drawImage(logoImage, footerStartX, footerY + 10.5, 15, 15);
-    }
-    ctx.fillStyle = '#8c7b72';
-    ctx.textAlign = 'left';
-    ctx.fillText(footerText, footerStartX + 21, footerY + 21.5);
-
-    ctx.restore(); // Fim do clip do card
-
-    // Borda externa do crachá
-    ctx.strokeStyle = palette.cardBorder;
-    ctx.lineWidth = 1.5;
-    this.strokeRoundedRect(ctx, cardX, cardTopY, cardWidth, cardHeight, 20);
-
-    const dataUrl = canvas.toDataURL('image/png', 1.0);
-    const blob = await this.convertDataUrlToBlob(dataUrl);
-    const fileName = `${fileNameWithoutExtension}.png`;
-
-    return {
-      dataUrl,
-      blob,
-      fileName,
-    };
   }
 
   private extractThemeFromElement(element: HTMLElement): string {
@@ -709,6 +1242,30 @@ export class HtmlToImageCardGeneratorAdapter implements CardImageGeneratorPort {
     ctx.lineJoin = 'round';
     ctx.stroke(new Path2D('M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'));
     ctx.stroke(new Path2D('M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'));
+    ctx.restore();
+  }
+
+  private drawLucideCalendarIcon(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    size: number,
+    color: string,
+  ): void {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(size / 24, size / 24);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke(new Path2D('M8 2v4M16 2v4'));
+    ctx.stroke(
+      new Path2D(
+        'M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z',
+      ),
+    );
+    ctx.stroke(new Path2D('M3 10h18'));
     ctx.restore();
   }
 

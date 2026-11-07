@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { BadgeCardPreview } from '../components/BadgeCardPreview';
 import { CardEditorForm } from '../components/CardEditorForm';
+import { LibraryCardPreview } from '../components/LibraryCardPreview';
 import { ShareActionsPanel } from '../components/ShareActionsPanel';
 import { useMemberCardController } from '../hooks/useMemberCardController';
 
@@ -12,6 +13,7 @@ export const CardGeneratorPage: React.FC = () => {
     isGeneratingImage,
     isUploadingAvatar,
     feedback,
+    updateModel,
     updateFullName,
     updateCity,
     updateState,
@@ -33,21 +35,35 @@ export const CardGeneratorPage: React.FC = () => {
 
   return (
     <div className="app-split-layout">
-      {/* Coluna Esquerda Fixa: O Crachá fica sempre centralizado na tela mesmo ao rolar */}
+      {/* Coluna Esquerda Fixa: O Crachá ou Cartão de Biblioteca fica sempre centralizado */}
       <aside className="left-preview-column" aria-label="Pré-visualização do Card">
         <div className="preview-sticky-wrapper">
           <div className="live-indicator-badge">
             <span className="live-pulse-dot" />
-            <span>PRÉVIA EM TEMPO REAL</span>
+            <span>
+              {card.model === 'library-card'
+                ? 'PRÉVIA EM TEMPO REAL • CARTÃO DE BIBLIOTECA (WHATSAPP 4:5)'
+                : 'PRÉVIA EM TEMPO REAL • CRACHÁ CREDENCIAL (WHATSAPP 4:5)'}
+            </span>
           </div>
 
-          <BadgeCardPreview
-            card={card}
-            alignedPhotoDataUrl={alignedPhotoDataUrl}
-            exportRef={exportableCardRef}
-            onTriggerPhotoUpload={triggerPhotoSelection}
-            onUpdatePhotoAlignment={updatePhotoAlignment}
-          />
+          {card.model === 'library-card' ? (
+            <LibraryCardPreview
+              card={card}
+              alignedPhotoDataUrl={alignedPhotoDataUrl}
+              exportRef={exportableCardRef}
+              onTriggerPhotoUpload={triggerPhotoSelection}
+              onUpdatePhotoAlignment={updatePhotoAlignment}
+            />
+          ) : (
+            <BadgeCardPreview
+              card={card}
+              alignedPhotoDataUrl={alignedPhotoDataUrl}
+              exportRef={exportableCardRef}
+              onTriggerPhotoUpload={triggerPhotoSelection}
+              onUpdatePhotoAlignment={updatePhotoAlignment}
+            />
+          )}
         </div>
       </aside>
 
@@ -80,6 +96,7 @@ export const CardGeneratorPage: React.FC = () => {
             alignedPhotoDataUrl={alignedPhotoDataUrl}
             fileInputRef={fileInputRef}
             isUploadingAvatar={isUploadingAvatar}
+            onUpdateModel={updateModel}
             onUpdateFullName={updateFullName}
             onUpdateCity={updateCity}
             onUpdateState={updateState}
